@@ -1,0 +1,116 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\AdminLTE\dist\js\plugins\**" />
+    <Compile Remove="wwwroot\AdminLTE\plugins\**" />
+    <Content Remove="wwwroot\AdminLTE\dist\js\plugins\**" />
+    <Content Remove="wwwroot\AdminLTE\plugins\**" />
+    <EmbeddedResource Remove="wwwroot\AdminLTE\dist\js\plugins\**" />
+    <EmbeddedResource Remove="wwwroot\AdminLTE\plugins\**" />
+    <None Remove="wwwroot\AdminLTE\dist\js\plugins\**" />
+    <None Remove="wwwroot\AdminLTE\plugins\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\js\Admin\Product.js" />
+    <Content Remove="wwwroot\js\Shop\checkout.js" />
+    <Content Remove="wwwroot\js\Shop\product.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\Admin\Product.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\Shop\checkout.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\Shop\product.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\Admin\Product.js" />
+    <None Include="wwwroot\js\Shop\checkout.js" />
+    <None Include="wwwroot\js\Shop\product.js" />
+    <None Include="wwwroot\js\System\QuanLyTaiKhoan.js" />
+    <None Include="wwwroot\js\System\SPermission.js" />
+    <None Include="wwwroot\js\System\SRole.js" />
+    <None Include="wwwroot\js\System\SUser.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\LICENSE" />
+    <None Include="wwwroot\lib\custom-drag-drop-file-upload\fileUpload\fileUpload.js" />
+    <None Include="wwwroot\lib\custom-drag-drop-file-upload\LICENSE" />
+    <None Include="wwwroot\lib\custom-drag-drop-file-upload\README.md" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\LICENSE.md" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
+    <None Include="wwwroot\lib\lightslider-master\.editorconfig" />
+    <None Include="wwwroot\lib\lightslider-master\.gitignore" />
+    <None Include="wwwroot\lib\lightslider-master\.jshintrc" />
+    <None Include="wwwroot\lib\lightslider-master\.travis.yml" />
+    <None Include="wwwroot\lib\lightslider-master\contributing.md" />
+    <None Include="wwwroot\lib\lightslider-master\dist\js\lightslider.js" />
+    <None Include="wwwroot\lib\lightslider-master\dist\js\lightslider.min.js" />
+    <None Include="wwwroot\lib\lightslider-master\Gruntfile.js" />
+    <None Include="wwwroot\lib\lightslider-master\LICENSE" />
+    <None Include="wwwroot\lib\lightslider-master\README.md" />
+    <None Include="wwwroot\lib\lightslider-master\src\js\.jshintrc" />
+    <None Include="wwwroot\lib\lightslider-master\src\js\lightslider.js" />
+    <None Include="wwwroot\lib\lightslider-master\test\.jshintrc" />
+    <None Include="wwwroot\lib\lightslider-master\test\lightslider_test.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="GemBox.Spreadsheet" Version="2025.2.109" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.20" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.20">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.20">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>

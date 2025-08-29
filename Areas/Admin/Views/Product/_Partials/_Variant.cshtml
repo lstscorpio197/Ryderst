@@ -1,0 +1,60 @@
+﻿@model List<string>
+
+<div class="tab-pane fade" id="attr" role="tabpanel">
+    <div class="row mb16">
+        <div class="col-md-4">
+            Thuộc tính
+        </div>
+        <div class="col-md-8">
+            Giá trị
+        </div>
+    </div>
+    <div class="row mb16">
+        <div class="col-md-4">
+            <select class="w-100 product-attr" name="attr-1">
+                <!option>--Thuộc tính--</!option>
+                @foreach (var item in Model)
+                {
+                    <!option value="@item">@item</!option>
+                }
+            </select>
+        </div>
+        <div class="col-md-8">
+            <input name="value-1" class="w-100 attr-value" />
+        </div>
+    </div>
+    <div class="row mb16">
+        <div class="col-md-4">
+            <select class="w-100 product-attr" name="attr-2">
+                <!option>--Thuộc tính--</!option>
+                @foreach (var item in Model)
+                {
+                    <!option value="@item">@item</!option>
+                }
+            </select>
+        </div>
+        <div class="col-md-8">
+            <input name="value-2" class="w-100 attr-value" />
+        </div>
+    </div>
+
+    @* <div class="row mb16">
+        <div class="col-md-12"><button type="button" class="btn btn-primary btnGetVariant">Lấy danh sách biến thể</button></div>
+    </div> *@
+
+    <table class="w-100 tblVariant">
+        <thead>
+            <tr>
+                <th class="text-center width50px">STT</th>
+                <th class="text-center">SKU</th>
+                <th class="text-center width200px">Số lượng</th>
+                <th class="text-center width75px">#</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center" colspan="5">Không có dữ liệu</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,78 @@
+﻿@using ShopAdmin.Common
+@using ShopAdmin.Dto.Carts;
+
+@model List<CartItemDto>
+@{
+    ViewBag.Title = "Checkout";
+}
+<link rel="stylesheet" href="~/css/Shop/checkout.css" />
+<section class="container">
+    <div class="col-xs-12 col-sm-6">
+        <h2>Thông tin giao hàng</h2>
+        <form id="checkoutForm" method="post">
+            <div class="form-group">
+                <label>Họ tên</label>
+                <input type="text" name="FullName" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>Số điện thoại</label>
+                <input type="tel" name="Phone" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>Địa chỉ</label>
+                <input type="text" name="Address" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>Ghi chú</label>
+                <textarea type="text" name="Note" rows="3" class="form-control"></textarea>
+            </div>
+            @* <h2>Phương thức thanh toán</h2>
+            <div class="form-group">
+                <label><input type="radio" name="PaymentMethod" value="COD" checked /> Thanh toán khi nhận hàng</label><br />
+                <label><input type="radio" name="PaymentMethod" value="Online" /> Chuyển khoản ngân hàng</label>
+            </div> *@
+        </form>
+    </div>
+
+    <div class="col-xs-12 col-sm-6">
+        <h2>Đơn hàng của bạn</h2>
+        <ul class="product-summary">
+            @foreach (var item in Model)
+            {
+                <li data-product-id="@item.ProductId">
+                    <div class="product-thumb">
+                        <img src="@item.ImageUrl" alt="@item.ProductName" />
+                    </div>
+                    <div class="product-name">@item.ProductName</div>
+                    <div class="quantity-control">
+                        <button class="qty-decrease" data-id="@item.ProductVariantId">–</button>
+                        <input type="number" class="qty-input" value="@item.Quantity" min="1" data-id="@item.ProductVariantId" />
+                        <button class="qty-increase" data-id="@item.ProductVariantId">+</button>
+                    </div>
+                    <div class="product-price">@item.PriceTxt ₫</div>
+                    <div class="remove-item" data-id="@item.ProductVariantId"><i class="icon-delete-ico-tsd"></i></div>
+                </li>
+            }
+        </ul>
+
+
+        <div class="form-group coupon-group">
+            <label for="coupon">Mã giảm giá</label>
+            <input type="text" id="coupon" name="CouponCode" class="form-control" placeholder="Nhập mã giảm giá nếu có" />
+            <button type="button" class="apply-coupon">Áp dụng</button>
+        </div>
+
+        <div class="total-summary">
+            <p>Tạm tính: <strong><span id="OriginPrice">@(Model.Sum(x => x.Price * x.Quantity).ToStringNumber())</span> ₫</strong></p>
+            <p>Phí vận chuyển: <strong><span id="ShippingFee">30,000</span> ₫</strong></p>
+            <p>Giảm giá: <strong><span id="DiscountValue">0</span> ₫</strong></p>
+            <p>Tổng cộng: <strong><span id="TotalValue">@((Model.Sum(x => x.Price * x.Quantity) + 30000).ToStringNumber())</span> ₫</strong></p>
+        </div>
+
+        <button type="button" form="checkoutForm" id="btnCheckout" class="btn-complete-order">Hoàn tất đơn hàng</button>
+    </div>
+</section>
+
+@section scripts {
+    <script src="/js/Shop/checkout.js"></script>
+}

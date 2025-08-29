@@ -1,0 +1,36 @@
+﻿<!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <h3>Giỏ Hàng</h3>
+        <button class="close-cart" id="closeCart">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <div class="cart-items" id="cartItems">
+        <!-- Cart items will be loaded here -->
+    </div>
+    <div class="cart-footer">
+        <div class="cart-total">
+            <span>Tổng cộng: <strong id="cartTotal">0₫</strong></span>
+        </div>
+        <a href="checkout"><button class="checkout-btn" href="checkout" id="checkoutBtn">Thanh Toán</button></a>
+    </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal" id="productModal">
+    <div class="modal-content">
+        <button class="modal-close" id="modalClose">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        <div class="modal-body" id="modalBody">
+            <!-- Product details will be loaded here -->
+        </div>
+    </div>
+</div>

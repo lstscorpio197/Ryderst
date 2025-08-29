@@ -1,0 +1,101 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using ShopAdmin.Common
+
+@{
+    var routeValues = ViewContext.RouteData.Values;
+    string controller = (string)routeValues["controller"];
+    ViewData["Title"] = AppMenu.ListMenu.FirstOrDefault(x => x.Controller == controller)?.ControllerName ?? "Trang chủ";
+
+    using var db = new ShopDbContext();
+    var lstCategory = await db.Categories.AsNoTracking().ToListAsync().ConfigureAwait(false);
+    var lstAttr = await db.ProductAttributes.AsNoTracking().Select(x => x.Name).Distinct().ToListAsync().ConfigureAwait(false);
+}
+<div class="mx-ecus">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title bold">@ViewBag.Title</div>
+            <div class="card-right">
+                <button class="btn btn-primary" id="btn-add" type="button" data-bs-toggle="modal" data-bs-target="#CHITIET"><i class="icon-add-ico-tsd"></i><span class="ml8">Thêm mới</span></button>
+            </div>
+        </div>
+        <div class="card-body" style="max-height: 929px;">
+            <div class="frame-header">
+                <div class="frame-search">
+                    <input name="Ma" placeholder="Mã sản phẩm" class="item-search wid120px" autocomplete="off" />
+                    <input name="Ten" placeholder="Tên sản phẩm" class="item-search wid240px" autocomplete="off" />
+                    <button class="btn btn-primary btnSearch" type="button"><i class="icon-search-ico-tsd"></i></button>
+                </div>
+            </div>
+            <div class="frame-body has-scroll" style="">
+                <table class="width100" id="TBLDANHSACH">
+                    <thead>
+                        <tr>
+                            <th class="width70px text-center">STT</th>
+                            <th class="wid100px text-center">Thao tác</th>
+                            <th class="text-center ">Mã</th>
+                            <th class="text-center ">Tên sản phẩm</th>
+                            <th class="text-center ">Giá</th>
+                            <th class="text-center ">Số lượng</th>
+                            <th class="text-center ">Danh mục</th>
+                            @* <th class="text-center ">Bộ sưu tập</th> *@
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="frame-footer">
+                @await Html.PartialAsync("_PaginationPartial")
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal modal-edit left fade" id="CHITIET" role="dialog" aria-labelledby="exampleModalLabel" data-bs-keyboard="true" aria-bs-hidden="true" data-bs-backdrop="static" style="padding-top: 42px !important;">
+    <div class="modal-dialog modal-lg modal-dialog-slideout" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">
+                    Thông tin sản phẩm
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="icon-close-ico-tsd"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background-color: #FBFBFB">
+                <ul class="nav nav-tabs" id="productTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info"
+                                type="button" role="tab">
+                            Thông tin
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="desc-tab" data-bs-toggle="tab" data-bs-target="#attr"
+                                type="button" role="tab">
+                            Biến thể
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="image-tab" data-bs-toggle="tab" data-bs-target="#image"
+                                type="button" role="tab">
+                            Hình ảnh
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content pt-3" id="productTabContent" style="height: calc(100% - 50px); overflow:auto;">
+                    @await Html.PartialAsync("_Partials/_Info.cshtml", lstCategory)
+                    @await Html.PartialAsync("_Partials/_Variant.cshtml", lstAttr)
+                    @await Html.PartialAsync("_Partials/_Images.cshtml")
+                </div>
+            </div>
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="icon-close-ico-tsd"></i><span class="ml8">Đóng</span></button>
+                <button type="button" class="btn btn-primary" id="btn-save"><i class="icon-save-ico-tsd"></i><span class="ml8">Lưu lại</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/js/Admin/Product.js"></script>
+}

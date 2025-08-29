@@ -1,0 +1,259 @@
+﻿.album-container {
+    text-align: -webkit-center;
+}
+
+#lightSlider ul {
+    list-style: none outside none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+#lightSlider li {
+    display: block;
+    float: left;
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+#lightSlider img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+    max-height: 700px;
+}
+
+/*breadcrumb*/
+
+.breadcrumb-shop .breadcrumb-arrows {
+    padding: 10px 0;
+    background: transparent;
+    border-radius: 0;
+    margin: 0;
+}
+
+.breadcrumb-shop .breadcrumb > li + li:before {
+    padding: 0 3px;
+}
+
+.breadcrumb-shop .breadcrumb-arrows li {
+    font-size: 13px;
+}
+
+/*PRODUCT DETAIL*/
+
+.product-detail-wrapper {
+    padding: 10px 0 10px 0;
+}
+
+.product-detail-main {
+    margin-bottom: 80px;
+}
+
+.product-title {
+    padding: 0 0 10px;
+    border-bottom: 1px dotted #dfe0e1;
+}
+
+    .product-title h1 {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 10px;
+        line-height: initial;
+    }
+
+.statusProduct {
+    color: black;
+    font-weight: bold;
+}
+
+.product-price {
+    padding: 10px 0;
+}
+
+    .product-price span.pro-price {
+        font-size: 21px;
+        font-weight: bold;
+    }
+
+    .product-price span.pro-sale {
+        margin: 0 0 0 10px;
+        color: #e01b22;
+        font-weight: bold;
+    }
+
+    .product-price del {
+        font-size: 14px;
+        color: #b4b4b4;
+        padding-left: 20px;
+    }
+
+#add-item-form {
+    margin: 0 0 20px 0;
+}
+
+.swatch {
+    padding: 10px 0;
+    width: 100%;
+    float: left
+}
+
+    .swatch .variant-header {
+        margin: 0 0 10px 0;
+        font-size: 13px;
+        text-align: left;
+        line-height: initial;
+        font-weight: bold;
+        text-transform: uppercase;
+        float: left;
+        width: 100%;
+    }
+
+    .swatch .select-swap {
+        vertical-align: middle;
+        float: left;
+    }
+
+    .swatch .swatch-element {
+        display: inline-block;
+        margin-right: 8px;
+        position: relative;
+        vertical-align: bottom;
+    }
+
+        .swatch .swatch-element label {
+            display: block;
+            margin: 0;
+            background: #fff;
+            width: 40px;
+            height: 40px;
+            line-height: 38px;
+            position: relative;
+            border: 1px solid #d7d7d7;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            color: #333333;
+        }
+        .swatch .swatch-element label.active {
+            background:#d4d4d4;
+        }
+
+.guideSize {
+    /* float: right; */
+    margin-left: 10px;
+}
+
+    .guideSize a {
+        text-decoration: underline;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: normal;
+        text-transform: capitalize;
+    }
+
+
+.quantity-area {
+    margin: 15px 0;
+}
+
+    .quantity-area input#quantity {
+        padding: 0;
+        -webkit-appearance: none;
+        float: left;
+        outline: none;
+        border-radius: 0;
+        display: block;
+        margin: 0;
+        background: #fff;
+        width: 60px;
+        height: 40px;
+        line-height: 20px;
+        position: relative;
+        border: 1px solid #e5e5e5;
+        font-weight: normal;
+        text-align: center;
+        cursor: pointer;
+        font-size: 14px;
+        border-left: none;
+        border-right: none;
+    }
+
+    .quantity-area input.qty-btn {
+        float: left;
+        outline: none;
+        border-radius: 0;
+        display: block;
+        margin: 0;
+        background: #fff;
+        width: 40px;
+        height: 40px;
+        line-height: 20px;
+        position: relative;
+        border: 1px solid #e5e5e5;
+        font-weight: normal;
+        text-align: center;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+button.btn-addtocart {
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: none;
+    padding: 14px 35px;
+    line-height: 22px;
+    width: 100%;
+}
+
+    button.btn-addtocart[disabled] {
+        opacity: 0.8;
+    }
+
+.wrap-addcart button.btnAddToCart:first-child {
+    margin-right: 10px;
+}
+
+.wrap-addcart button {
+    width: 47%;
+    min-height: 50px;
+    background: #000;
+    border: none;
+    font-size: 15px;
+    text-transform: uppercase;
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease-in-out 0s;
+    -moz-transition: all 0.3s ease-in-out 0s;
+    -o-transition: all 0.3s ease-in-out 0s;
+    -webkit-transition: all 0.3s ease-in-out 0s;
+    -ms-transition: all 0.3s ease-in-out 0s;
+    /*background-size: 25px;*/
+    /*background-position: 45px 11px;*/
+    float: left;
+    padding: 7px 0;
+}
+
+/*DESCRIPTION*/
+.product-description .title-bl h2 {
+    text-transform: uppercase;
+    font-size: 14px;
+    margin: 0;
+    position: relative;
+}
+
+.description-productdetail {
+    margin: 15px 0 0 0;
+}
+
+    .description-productdetail * {
+        font-size: 13px !important;
+    }
+
+
+/*SẢN PHẨM TƯƠNG TỰ*/
+.related-products img{
+    width:100%;
+    height:300px;
+}

@@ -1,0 +1,52 @@
+﻿@model List<Category>
+
+<div class="tab-pane fade show active" id="info" role="tabpanel">
+    <!-- Nội dung tab Thông tin -->
+    <div class="modal-body-content" style="padding: 16px; background-color: #FFFFFF;height: 100%;">
+        <form id="ModalForm">
+            <input name="Id" class="hidden" value="0" />
+            <div class="row">
+                <div class="col-md-4">Mã sản phẩm <span class="red">*</span></div>
+                <div class="col-md-8">Tên sản phẩm <span class="red">*</span></div>
+            </div>
+            <div class="row mb16">
+                <div class="col-md-4">
+                    <input type="text" maxlength="100" name="SKU" class="wid100" />
+                </div>
+                <div class="col-md-8">
+                    <input type="text" maxlength="100" name="Name" class="wid100" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">Danh mục <span class="red">*</span></div>
+                <div class="col-md-4">Số lượng <span class="red">*</span></div>
+                <div class="col-md-4">Đơn giá (VNĐ) <span class="red">*</span></div>
+            </div>
+            <div class="row mb16">
+                <div class="col-md-4">
+                    <select class="w-100" name="CategoryId">
+                        <option value="">--Chọn danh mục--</option>
+                        @foreach(var item in Model)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" maxlength="100" name="Stock" class="wid100" />
+                </div>
+                <div class="col-md-4">
+                    <input type="text" maxlength="100" name="Price" class="wid100" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">Mô tả sản phẩm</div>
+            </div>
+            <div class="mb16 row">
+                <div class="col-md-12" id="">
+                    <textarea id="descriptionEditor" name="Description"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

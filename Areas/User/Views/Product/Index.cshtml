@@ -1,0 +1,142 @@
+﻿@using ShopAdmin.Common
+@using ShopAdmin.Dto.Products
+
+@model ProductDto
+
+<div class="productDetail-page tp_product_detail" data-id="@(Model.Id)">
+    <div class="breadcrumb-shop clearfix">
+        <div class="container">
+            <div class=" ">
+                <ol class="breadcrumb breadcrumb-arrows clearfix">
+                    <li><a rel="nofollow" href="/" target="_self"><i class="fa fa-home"></i> Trang chủ</a></li>
+                    <li><a rel="nofollow" href="/@(Model.CategoryName)-pc@(Model.CategoryId)" data-id="@Model.CategoryId">@Model.CategoryName</a></li>
+                    <li class="active"><span>@Model.Name</span></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="product-content">
+        <div class="container">
+            <div class="row product-detail-wrapper">
+                <div class="clearfix product-detail-main">
+                    <div class="col-md-6">
+                        <div class="album-container">
+                            <ul id="lightSlider">
+                                @foreach (var img in Model.ImageUrl)
+                                {
+                                    <li data-thumb="@img">
+                                        <img src="@img" />
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="product-title">
+                            <h1>@Model.Name</h1>
+                            <div class="pro-soldold">
+                                <span class="statusProduct">Còn hàng</span>
+                            </div>
+                        </div>
+
+                        <div class="product-price">
+                            <span class="pro-price tp_product_detail_price">@Model.Price.ToStringNumber() ₫</span>
+                        </div>
+
+                        <form id="add-item-form" class="variants clearfix">
+                            <div class="select-swatch clearfix ">
+                                @foreach (var item in Model.Attributes)
+                                {
+                                    <div class="swatch clearfix attribute" data-id="@item.Id" data-name="@item.Name">
+                                        <div class="variant-header">
+                                            @item.Name
+                                        </div>
+                                        <div class="select-swap req" data-column="i1">
+                                            @foreach (var value in item.ProductAttrs)
+                                            {
+                                                <div data-value="" class=" n-sd swatch-element">
+                                                    <label data-value="@(value.Id)" class="select-attr-value" data-original-title="" title="">
+                                                        <span>@(value.Value)</span>
+                                                    </label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="selector-actions">
+                                <div class="quantity-area clearfix">
+                                    <input type="button" value="-" class="qty-btn tp_button btn-subtract">
+                                    <input type="text" id="quantity" name="quantity" value="1" min="1" class="quantity-selector" max="873">
+                                    <input type="button" value="+" class="qty-btn tp_button btn-add">
+
+                                </div>
+
+                                <div class="wrap-addcart clearfix">
+                                    <button type="button" id="add-to-cart" class="btnAddToCart tp_button">
+                                        Thêm vào giỏ hàng
+                                    </button><button type="button" id="addQuickCart" class="btnAddToCart">
+                                        Mua ngay
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="product-description">
+                            <div class="title-bl">
+                                <h2>
+                                    Mô tả sản phẩm
+                                    <span class="icon-open active"></span>
+                                </h2>
+                            </div>
+                            <div class="description-content" style="display: block;">
+                                <div class="description-productdetail">
+                                    <div class="description-productdetail">
+                                        @Html.Raw(Model.Description)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center">Sản phẩm tương tự</h1>
+                </div>
+
+                <div class="related-products" data-id="@Model.Id" data-cateid="@Model.CategoryId">
+                    <div class="swiper relatedSwiper">
+                        <div class="swiper-wrapper">
+                            @for (int i = 0; i < 8; i++)
+                            {
+                                <div class="swiper-slide">
+                                    <div class="product-card">
+                                        <img src="/ProductImg/demo/@(i%4 + 1).jpg" alt="Áo phông @(i%4 + 1)" />
+                                        <h4>Áo phông @i</h4>
+                                        <p>99,000 đ</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Navigation -->
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="/js/Shop/product.js"></script>
+}

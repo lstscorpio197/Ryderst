@@ -1,0 +1,60 @@
+﻿@using ShopAdmin.Common
+@using ShopAdmin.Helper
+@using ShopAdmin.Models
+@{
+    var lstMenuParent = AppMenu.ListMenu.Where(x => x.ParentId == null || x.Type == 0).ToList();
+
+    var routeValues = ViewContext.RouteData.Values;
+    string controller = (string)routeValues["controller"];
+    USER us = Context.Session.GetObject<USER>(AppConst.UserSession) ?? new USER();
+    var lstMenuForUS = us.ChucVu != UserLevel.Admin ? us.LstPermission.Select(x => x.Controller) : AppMenu.ListMenu.Select(x => x.Controller);
+}
+
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        @foreach (var item in lstMenuParent)
+        {
+            int i = 0;
+            if (item.Type == 1 && !lstMenuForUS.Contains(controller) && controller != "Home")
+            {
+                continue;
+            }
+            var lstChild = AppMenu.ListMenu.Where(x => x.ParentId == item.Id && lstMenuForUS.Contains(x.Controller)).ToList();
+            if (item.Type == 0)
+            {
+                if (!lstChild.Any())
+                {
+                    continue;
+                }
+                <li class="nav-item has-treeview @(lstChild.Where(x=>x.Controller == controller).Any() ? "menu-open" : "") ">
+                    <a href="#" class="nav-link ">
+                        <i class="nav-icon @item.Icon"></i> <p>@item.ControllerName<i class="right fa fa-angle-left"></i></p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                        @foreach (var child in lstChild)
+                        {
+                            i++;
+                            <li class="nav-item @(controller == child.Controller ? "active" : "")" title="@child.ControllerName">
+                                <a href="/Admin/@StringConverter.ConvertToSlug(child.ControllerName)" class="nav-link">
+                                    <p style="padding-left: 26px;line-height: 18px">@i. @child.ControllerName</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item @(controller == item.Controller ? "active" : "")">
+                    <a href="/Admin/@StringConverter.ConvertToSlug(item.ControllerName)" class="nav-link">
+                        <i class="nav-icon @item.Icon"></i>
+                        <p>
+                            @item.ControllerName
+                        </p>
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</nav>

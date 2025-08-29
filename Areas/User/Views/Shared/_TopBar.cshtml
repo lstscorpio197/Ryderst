@@ -1,0 +1,110 @@
+﻿@using Microsoft.EntityFrameworkCore
+
+@{
+    var db = new ShopDbContext();
+    var lstMenu = await db.Categories.AsNoTracking().ToListAsync().ConfigureAwait(false);
+
+    var lstMenuParent = lstMenu.Where(x => x.ParentId == null);
+
+}
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <div class="left-bar">
+                <div class="logo">
+                    <a href="/">
+                        <img src="~/Images/logo-jpg.jpg" />
+                    </a>
+                </div>
+
+                <nav class="nav">
+                    <ul class="nav-list">
+                        @foreach (var item in lstMenuParent)
+                        {
+                            var lstChild = lstMenu.Where(x => x.ParentId == item.Id);
+                            if (lstChild.Any())
+                            {
+                                <li class="nav-item has-submenu">
+                                    <div class="nav-link">@item.Name</div>
+                                    <ul class="submenu">
+                                        @foreach (var child in lstChild)
+                                        {
+                                            var lstChild2 = lstMenu.Where(x => x.ParentId == child.Id);
+                                            if (lstChild2.Any())
+                                            {
+                                                <li class="submenu-item has-submenu">
+                                                    <a>@child.Name</a>
+                                                    <ul class="submenu">
+                                                        @foreach (var child2 in lstChild2)
+                                                        {
+                                                            <li><a href="@($"{child2.Name}-pc{child2.Id}")">@child2.Name</a></li>
+                                                        }
+                                                    </ul>
+                                                </li>
+                                            }
+
+                                            else
+                                            {
+                                                <li class="submenu-item">
+                                                    <a href="@($"{child.Name}-pc{child.Id}")">@child.Name</a>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a href="@($"{item.Name}-pc{item.Id}" )" class="nav-link">@item.Name</a>
+                                </li>
+                            }
+                        }
+                        @* <li class="nav-item">
+                            <a href="album" class="nav-link">Album</a>
+                        </li> *@
+                        <li class="nav-item">
+                            <a href="tin-tuc" class="nav-link">Tin tức</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            
+
+            <div class="header-actions">
+                @* <button class="action-btn" id="searchBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="action-btn" id="wishlistBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </button>
+                <button class="action-btn" id="accountBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button> *@
+                <button class="action-btn cart-btn" id="cartBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>

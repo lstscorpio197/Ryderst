@@ -1,0 +1,94 @@
+﻿@using ShopAdmin.Common
+@using ShopAdmin.Helper
+@{
+    USER us = Context.Session.GetObject<USER>(AppConst.UserSession) ?? new USER();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewData["Title"] ?? "Ryder")</title>
+    <link rel="icon" type="image/x-icon" href="~/Images/logo.jpg" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome-6.4.0-pro/css/all.css" />
+    <link rel="stylesheet" href="~/lib/others/css/jquery-confirm.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-custom.css">
+    <link rel="stylesheet" href="~/lib/lightslider-master/src/css/lightslider.css">
+    <link rel="stylesheet" href="~/ico-tsd-v2/style.css" />
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.css" />
+
+    <link rel="stylesheet" href="~/css/Shop/site.css" />
+    <link rel="stylesheet" href="~/css/Shop/product.css" />
+</head>
+<body class="mx-vertical hold-transition sidebar-mini">
+    <div id="overlay"></div>
+    <div id="spinner"></div>
+    @Html.Partial("_TopBar")
+
+    <!-- Navigation -->
+    @Html.Partial("_Cart")
+
+    
+    <!-- Main content -->
+    @RenderBody()
+
+    <!-- Footer -->
+    @Html.Partial("_Footer")
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/others/js/jquery-confirm.js"></script>
+    <script src="~/lib/others/js/bootstrap-datetimepicker.min.js" asp-append-version="true"></script>
+    <script src="~/lib/select2/select2.min.js"></script>
+    <script src="~/js/helper/TableHelper.js" asp-append-version="true"></script>
+    <script src="~/js/helper/PageResizeHelper.js" asp-append-version="true"></script>
+    <script src="~/js/helper/HandleDataHelper.js" asp-append-version="true"></script>
+    <script src="~/js/helper/FormatInputHelper.js" asp-append-version="true"></script>
+    <script src="~/js/helper/MessageBoxHelper.js" asp-append-version="true"></script>
+    <script src="~/js/helper/AjaxConfigHelper.js" asp-append-version="true"></script>
+    <script src="~/js/share/common.js" asp-append-version="true"></script>
+    <script src="~/js/share/validator-addmethod.js" asp-append-version="true"></script>
+    <script src="~/lib/lightslider-master/src/js/lightslider.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery.blockUI.js" asp-append-version="true"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
+    <script src="~/js/share/common.js" asp-append-version="true"></script>
+    <script src="~/js/Shop/toast.js" asp-append-version="true"></script>
+    <script src="~/js/Shop/data.js" asp-append-version="true"></script>
+    @* <script src="~/js/Shop/site.js" asp-append-version="true"></script> *@
+    <script src="~/js/Shop/cart.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                showOverlay();
+                showSpinner();
+            });
+            $(document).ajaxStop(function () {
+                hideOverlay();
+                hideSpinner();
+            })
+        })
+
+        function showSpinner() {
+            $('#spinner').show();
+        }
+        function hideSpinner() {
+            $('#spinner').hide();
+        }
+        function showOverlay() {
+            $('#overlay').show();
+        }
+        function hideOverlay() {
+            $('#overlay').hide();
+        }
+    </script>
+</body>
+</html>

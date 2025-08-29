@@ -1,0 +1,74 @@
+﻿@using ShopAdmin.Common
+@using ShopAdmin.Dto.Products
+
+@{
+    var lstSPNew = ViewBag.ListSPNew as List<ProductDto>;
+    var lstSPBanChay = ViewBag.ListSPBanChay as List<ProductDto>;
+}
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            @* <h2>Bộ Sưu Tập Mùa Thu 2024</h2>
+            <p>Khám phá những xu hướng thời trang mới nhất với chất lượng cao cấp và thiết kế độc đáo</p>
+            <button class="cta-btn">Khám Phá Ngay</button> *@
+            @* <img loading="lazy" src="/Images/banner.jpg" /> *@
+        </div>
+    </div>
+</section>
+
+<!-- Products Section -->
+<section class="products">
+    <div class="container">
+        <div class="products-header jus-center text-uppercase">
+            <h2 class="section-title">Sản Phẩm Mới</h2>
+        </div>
+        <div class="products-grid" id="productsGrid">
+            @foreach (var product in lstSPNew)
+                {
+                    <div class="product-card fade-in" data-product="@product.Id" data-name="@product.Name"> 
+                        <div style="position: relative;">
+                            <img src="@(product.ImageUrl.FirstOrDefault())" alt="@product.Name" class="product-image">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">@product.Name</h3>
+                            <div class="product-price">
+                                <span class="current-price">@(product.Price.ToStringNumber())&nbsp;₫</span>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+        </div>
+    </div>
+</section>
+
+<!-- Products Section -->
+<section class="products">
+    <div class="container">
+        <div class="products-header jus-center text-uppercase">
+            <h2 class="section-title">Sản Phẩm Bán Chạy</h2>
+        </div>
+        <div class="products-grid" id="productsGrid">
+            @foreach (var product in lstSPBanChay)
+                {
+                    <div class="product-card fade-in" data-product="@product.Id" data-name="@product.Name">
+                        <div style="position: relative;">
+                            <img src="@(product.ImageUrl.FirstOrDefault())" alt="@product.Name" class="product-image">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">@product.Name</h3>
+                            <div class="product-price">
+                                <span class="current-price">@(product.Price.ToStringNumber())&nbsp;₫</span>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script src="/js/Shop/home.js"></script>
+}
