@@ -25,6 +25,8 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true; // Đảm bảo cookie chỉ được truy cập qua HTTP, không thể truy cập qua JavaScript
     options.Cookie.IsEssential = true; // Cookie là bắt buộc
 });
+
+
 var app = builder.Build();
 
 app.UseSession();

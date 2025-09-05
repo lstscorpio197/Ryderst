@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using ShopAdmin.Authorize;
 using ShopAdmin.Dto;
 using ShopAdmin.Dto.Products;
+using ShopAdmin.Helper;
 using ShopAdmin.Models;
 using ShopAdmin.WHttpMessage;
 
@@ -286,7 +287,7 @@ namespace ShopAdmin.Areas.Admin.Controllers
         private async Task<List<ProductImage>> SaveImage(ShopDbContext db, List<IFormFile> images, string sku)
         {
             // Thư mục lưu ảnh
-            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProductImg", sku);
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProductImg", SlugHelper.GenerateSlug(sku));
             if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);
 
@@ -305,7 +306,7 @@ namespace ShopAdmin.Areas.Admin.Controllers
 
                     lstImage.Add(new ProductImage
                     {
-                        ImageUrl = $"/ProductImg/{sku}/{fileName}",
+                        ImageUrl = $"/ProductImg/{SlugHelper.GenerateSlug(sku)}/{fileName}",
                         ImageName = fileName
                     });
                     // TODO: Lưu đường dẫn file vào DB (vd: ProductImages table)
