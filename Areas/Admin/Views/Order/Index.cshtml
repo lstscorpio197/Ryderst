@@ -1,0 +1,172 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using ShopAdmin.Common
+
+@{
+    var routeValues = ViewContext.RouteData.Values;
+    string controller = (string)routeValues["controller"];
+    ViewData["Title"] = AppMenu.ListMenu.FirstOrDefault(x => x.Controller == controller)?.ControllerName ?? "Trang chủ";
+}
+<div class="mx-ecus">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title bold">@ViewBag.Title</div>
+            <div class="card-right">
+                @* <button class="btn btn-primary" id="btn-add" type="button" data-bs-toggle="modal" data-bs-target="#CHITIET"><i class="icon-add-ico-tsd"></i><span class="ml8">Thêm mới</span></button> *@
+            </div>
+        </div>
+        <div class="card-body" style="max-height: 929px;">
+            <div class="frame-header">
+                <div class="frame-search">
+                    <input name="Ten" placeholder="Tên hoặc số điện thoại" class="item-search wid240px" autocomplete="off" />
+                    <select name="TrangThai" class="item-search wid150px">
+                        <option value="">--Trạng thái--</option>
+                        <option value="0">Đã đặt hàng</option>
+                        <option value="1">Đã xác nhận</option>
+                        <option value="2">Đang giao hàng</option>
+                        <option value="3">Đã giao hàng</option>
+                        <option value="4">Đã hủy</option>
+                        <option value="5">Đã hoàn</option>
+                        <option value="6">Đã hoàn thành</option>
+                    </select>
+                    <select name="TrangThaiThanhToan" class="item-search wid240px">
+                        <option value="">--Trạng thái thanh toán--</option>
+                        <option value="0">Chưa thanh toán</option>
+                        <option value="1">Đã thanh toán</option>
+                    </select>
+                    <button class="btn btn-primary btnSearch" type="button"><i class="icon-search-ico-tsd"></i></button>
+                </div>
+            </div>
+            <div class="frame-body has-scroll" style="">
+                <table class="width100" id="TBLDANHSACH">
+                    <thead>
+                        <tr>
+                            <th class="width70px text-center">STT</th>
+                            <th class="wid50px text-center">#</th>
+                            <th class="text-center ">Tên khách hàng</th>
+                            <th class="text-center ">Số điện thoại</th>
+                            <th class="text-center ">Địa chỉ</th>
+                            <th class="text-center ">Tổng tiền thanh toán</th>
+                            <th class="text-center ">Trạng thái</th>
+                            <th class="text-center ">Trạng thái thanh toán</th>
+                            <th class="text-center ">Ngày tạo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="frame-footer">
+                @await Html.PartialAsync("_PaginationPartial")
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal modal-edit left fade" id="CHITIET" role="dialog" aria-labelledby="exampleModalLabel" data-bs-keyboard="true" aria-bs-hidden="true" data-bs-backdrop="static" style="padding-top: 42px !important;">
+    <div class="modal-dialog modal-lg modal-dialog-slideout" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">
+                    Thông tin đơn hàng
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="icon-close-ico-tsd"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background-color: #FBFBFB">
+                <div class="modal-body-content" style="padding: 16px; background-color: #FFFFFF;height: 100%;">
+                    <form id="ModalForm">
+                        <input name="Id" class="hidden" value="" />
+                        <div class="row">
+                            <div class="col-md-4">Tên khách hàng <span class="red">*</span></div>
+                            <div class="col-md-4">Số điện thoại <span class="red">*</span></div>
+                            <div class="col-md-4">Ngày tạo <span class="red">*</span></div>
+                        </div>
+                        <div class="row mb16">
+                            <div class="col-md-4">
+                                <input type="text" maxlength="100" name="FullName" class="wid100" disabled readonly />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" maxlength="20" name="Phone" class="wid100" disabled readonly />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="CreatedTime" class="wid100" disabled readonly />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">Địa chỉ</div>
+                        </div>
+                        <div class="row mb16">
+                            <div class="col-md-12">
+                                <input type="text" name="Address" class="wid100" disabled readonly />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">Ghi chú</div>
+                        </div>
+                        <div class="row mb16">
+                            <div class="col-md-12">
+                                <textarea type="text" name="Note" rows="2" class="wid100" disabled readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">Trạng thái</div>
+                            <div class="col-md-6">Trạng thái thanh toán</div>
+                        </div>
+                        <div class="mb16 row">
+                            <div class="col-md-6">
+                                <select name="Status" class="wid100">
+                                    <option value="">--Trạng thái--</option>
+                                    <option value="0">Đã đặt hàng</option>
+                                    <option value="1">Đã xác nhận</option>
+                                    <option value="2">Đang giao hàng</option>
+                                    <option value="3">Đã giao hàng</option>
+                                    <option value="4">Đã hủy</option>
+                                    <option value="5">Đã hoàn</option>
+                                    <option value="6">Đã hoàn thành</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select name="PaymentStatus" class=" wid100">
+                                    <option value="">--Trạng thái thanh toán--</option>
+                                    <option value="0">Chưa thanh toán</option>
+                                    <option value="1">Đã thanh toán</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+
+                    <section>
+                        <div class="text-bold">
+                            Danh sách sản phẩm
+                        </div>
+                        <div class="">
+                            <table id="tbl-items" class="wid100">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center width50px">STT</th>
+                                        <th class="text-center">Tên sản phẩm</th>
+                                        <th class="text-center">Đơn giá</th>
+                                        <th class="text-center">Số lượng</th>
+                                        <th class="text-center">Tổng tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="icon-close-ico-tsd"></i><span class="ml8">Đóng</span></button>
+                <button type="button" class="btn btn-primary" id="btn-save"><i class="icon-save-ico-tsd"></i><span class="ml8">Lưu lại</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/js/Admin/Order.js"></script>
+}

@@ -22,5 +22,8 @@ namespace ShopAdmin.Models
         public int PaymentType { get; set; }
         public decimal ShippingFee { get; set; }
         public ICollection<OrderItem> Items { get; set; }
+
+        public DateTime? LastModifiedTime { get; set; }
+        public int? LastModifiedUser { get; set; }
     }
 }

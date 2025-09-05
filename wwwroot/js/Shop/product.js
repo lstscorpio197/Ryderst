@@ -4,6 +4,7 @@
         this.changeQuantity();
         this.selectAttribute();
         this.addToCard();
+        this.buyNow();
 
     },
     self: $('.productDetail-page'),
@@ -146,7 +147,28 @@
             
         })
     },
+    buyNow: function () {
+        $product.self.find('#addQuickCart').off('click').on('click', function () {
+            let attrs = $product.getFullAttribute();
+            if (!attrs)
+                return false;
+            let quantity = $product.self.find('#quantity').val();
 
+            let dataSend = { ProductId: $product.id, Quantity: quantity, ProductAttributeValueIds: attrs };
+
+            var getResponse = AjaxConfigHelper.SendRequestToServer(`/Cart/AddToCard`, "POST", dataSend);
+            getResponse.then((res) => {
+                if (res.IsOk) {
+                    $cart.renderCartItems(res.Body.Data, res.Body.Description);
+                    window.location = `/checkout`;
+                }
+                else {
+
+                }
+            })
+
+        })
+    }
 }
 
 $product.init();

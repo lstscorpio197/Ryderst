@@ -1,5 +1,6 @@
 ﻿@using ShopAdmin.Common
 @using ShopAdmin.Dto.Products
+@using ShopAdmin.Helper
 
 @{
     var lstSPNew = ViewBag.ListSPNew as List<ProductDto>;
@@ -26,9 +27,9 @@
         <div class="products-grid" id="productsGrid">
             @foreach (var product in lstSPNew)
                 {
-                    <div class="product-card fade-in" data-product="@product.Id" data-name="@product.Name"> 
-                        <div style="position: relative;">
-                            <img src="@(product.ImageUrl.FirstOrDefault())" alt="@product.Name" class="product-image">
+                <div class="product-card fade-in" data-product="@product.Id" data-name="@(SlugHelper.GenerateSlug(product.Name))">
+                    <div style="position: relative;">
+                        <img loading="lazy" src="@(product.ImageUrl.FirstOrDefault())" alt="@product.Name" class="product-image">
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">@product.Name</h3>
