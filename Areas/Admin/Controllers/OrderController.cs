@@ -94,5 +94,34 @@ namespace ShopAdmin.Areas.Admin.Controllers
                 return Json(httpMessage);
             }
         }
+
+
+        public async Task<JsonResult> Update(UpdateOrderDto input)
+        {
+            HttpMessage httpMessage = new HttpMessage(true);
+            try
+            {
+                var item = await db.Orders.FirstOrDefaultAsync(x => x.Id == input.Id).ConfigureAwait(false);
+                if (item == null)
+                {
+                    httpMessage.IsOk = false;
+                    httpMessage.Body.MsgNoti = new HttpMessageNoti("400", null, "Không tìm thấy thông tin");
+                    return Json(httpMessage);
+                }
+                item.Status = input.Status;
+                item.PaymentStatus = input.PaymentStatus;
+                item.LastModifiedTime = DateTime.Now;
+                item.LastModifiedUser = us.Id;
+                db.Entry(item).State = EntityState.Modified;
+                await db.SaveChangesAsync().ConfigureAwait(false);
+                return Json(httpMessage);
+            }
+            catch (Exception ex)
+            {
+                httpMessage.IsOk = false;
+                httpMessage.Body.MsgNoti = new HttpMessageNoti("500", null, ex.Message);
+                return Json(httpMessage);
+            }
+        }
     }
 }

@@ -18,10 +18,25 @@ function DataSearch(pageNum) {
 $(function () {
     var $page = {
         init: function () {
+            $page.initValidate();
             $page.BtnSearchClick();
             $page.GetList(1);
         },
         Self: $('.card'),
+        initValidate: function () {
+            $form.validate({
+                rules: {
+                    Status: {
+                        required: true
+                    }
+                },
+                messages: {
+                    Status: {
+                        required: "Vui lòng chọn trạng thái"
+                    }
+                }
+            })
+        },
         BtnSearchClick: function () {
             $header.find('.btnSearch').on('click', function () { $page.GetList(1); });
         },
@@ -105,7 +120,7 @@ $(function () {
             let html = '';
             if (items.length == 0) {
                 html = `<tr><td class="text-center" colspan="5"><span>Không có bản ghi</span></td></tr>`;
-                $tableItems.html(html);
+                $tableItems.find('tbody').html(html);
                 return false;
             }
             for (let i = 0; i < items.length; i++) {
@@ -138,6 +153,10 @@ $(function () {
             })
         },
         GetDataInput: () => {
+            if (!$form.valid()) {
+                return false;
+            }
+
             let data = GetFormDataToObject($form);
             return data;
         },
@@ -146,13 +165,12 @@ $(function () {
                 let data = $ChiTiet.GetDataInput();
                 if (!data)
                     return false;
-                let action = data.Id > 0 ? 'Update' : 'Create';
+                let action = 'Update';
                 var getResponse = AjaxConfigHelper.SendRequestToServer(`/${$router}/${action}`, "POST", data);
                 getResponse.then((res) => {
                     if (res.IsOk) {
-                        let actionSub = data.Id > 0 ? 'Cập nhật thành công' : 'Thêm mới thành công';
-                        ToastSuccess(actionSub);
-                        $page.GetList(data.Id > 0 ? null : 1);
+                        ToastSuccess('Cập nhật thành công');
+                        $page.GetList(1);
                         $modal.modal('hide');
                     }
                     else {

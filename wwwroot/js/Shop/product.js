@@ -31,7 +31,7 @@
                 let data = res.Body.Data || [];
                 let itemsHtml = data.map(item => `
                     <div class="swiper-slide">
-                        <div class="product-card">
+                        <div class="product-card" data-id="${item.Id}" data-slug="${item.Slug}">
                             <img src="${item.ImageUrl}" alt="${item.Name}" />
                             <h4>${item.Name}</h4>
                             <p>${item.Price} đ</p>
@@ -60,6 +60,12 @@
                         }
                     }
                 });
+
+                $relatedItems.find('.product-card').off('click').on('click', function () {
+                    let slug = $(this).data('slug');
+                    let id = $(this).data('id');
+                    window.location = `/${slug}-p${id}`;
+                })
             }
             else {
 

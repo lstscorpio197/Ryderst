@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopAdmin.Dto.Products;
+using ShopAdmin.Helper;
 using ShopAdmin.Models;
 using ShopAdmin.WHttpMessage;
 
@@ -25,7 +26,8 @@ namespace ShopAdmin.Areas.User.Controllers
                     Id = x.Id,
                     Name = x.Name,
                     Price = x.Price,
-                    ImageUrl = x.Images.Select(x => x.ImageUrl).FirstOrDefault()
+                    ImageUrl = x.Images.Select(x => x.ImageUrl).FirstOrDefault(),
+                    Slug = SlugHelper.GenerateSlug(x.Name)
                 }).OrderBy(p => Guid.NewGuid()).Skip(0).Take(6).ToListAsync().ConfigureAwait(false);
                 httpMessage.Body.Data = products;
                 return Json(httpMessage);
