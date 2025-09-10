@@ -36,7 +36,7 @@
         >div {
             width: 100%;
             background-color: var(--file-bg);
-            padding: 25px;
+            padding: 5px;
             margin: 25px;
             border-radius: 10px;
             border: 1px dashed var(--file-border-color);

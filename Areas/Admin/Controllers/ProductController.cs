@@ -182,6 +182,11 @@ namespace ShopAdmin.Areas.Admin.Controllers
                     db.Entry(item).State = EntityState.Modified;
                     await db.SaveChangesAsync();
 
+                    var productImages = await SaveImage(db, images, entity.SKU);
+                    productImages.ForEach(x => x.ProductId = item.Id);
+                    await db.ProductImages.AddRangeAsync(productImages);
+                    await db.SaveChangesAsync();
+
                     await tran.CommitAsync();
 
                     httpMessage.Body.MsgNoti = new HttpMessageNoti("200", null, "Cập nhật thành công");
@@ -251,6 +256,36 @@ namespace ShopAdmin.Areas.Admin.Controllers
             }
         }
 
+        public async Task<JsonResult> RemoveImg(int id)
+        {
+            using (var tran = db.Database.BeginTransaction())
+            {
+                HttpMessage httpMessage = new HttpMessage(true);
+                try
+                {
+                    var item = await db.ProductImages.FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", item.ImageUrl.TrimStart('/'));
+
+                    db.ProductImages.Remove(item);
+                    await db.SaveChangesAsync().ConfigureAwait(false);
+
+                    System.IO.File.Delete(filePath);
+
+                    await tran.CommitAsync().ConfigureAwait(false);
+
+
+                    httpMessage.Body.Description = "Xóa ảnh thành công";
+                    return Json(httpMessage);
+                }
+                catch (Exception ex)
+                {
+                    await tran.RollbackAsync().ConfigureAwait(false);
+                    httpMessage.IsOk = false;
+                    httpMessage.Body.MsgNoti = new HttpMessageNoti("500", null, ex.Message);
+                    return Json(httpMessage);
+                }
+            }
+        }
 
         public async Task<JsonResult> GetListVariant(List<ProductAttributeValues> attrs, Product product)
         {
@@ -296,7 +331,7 @@ namespace ShopAdmin.Areas.Admin.Controllers
             {
                 if (file.Length > 0)
                 {
-                    var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                     var filePath = Path.Combine(uploadPath, fileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))

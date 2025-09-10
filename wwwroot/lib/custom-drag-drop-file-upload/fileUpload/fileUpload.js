@@ -1,4 +1,4 @@
-(function ($) {
+﻿(function ($) {
     var fileUploadCount = 0;
 
     $.fn.fileUpload = function () {
@@ -11,11 +11,11 @@
                 <label for="${fileUploadId}" class="file-upload">
                     <div>
                         <i class="material-icons-outlined">cloud_upload</i>
-                        <p>Drag & Drop Files Here</p>
-                        <span>OR</span>
-                        <div>Browse Files</div>
+                        <p class="m-0">Kéo và thả ảnh tại đây</p>
+                        <p class="m-0">hoặc</p>
+                        <div>Chọn ảnh</div>
                     </div>
-                    <input type="file" id="${fileUploadId}" name=[] multiple hidden />
+                    <input type="file" id="${fileUploadId}" name=[] multiple accept="image/*" hidden />
                 </label>
             `;
 
@@ -30,11 +30,10 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th style="width: 30%;">File Name</th>
-                                <th>Preview</th>
-                                <th style="width: 20%;">Size</th>
-                                <th>Type</th>
-                                <th></th>
+                                <th style="width: 30%;">Tên file</th>
+                                <th>Xem trước</th>
+                                <th style="width: 20%;">Kích thước</th>
+                                <th class="width50px"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -68,7 +67,6 @@
                                 <td>${fileName}</td>
                                 <td>${preview}</td>
                                 <td>${fileSize}</td>
-                                <td>${fileType}</td>
                                 <td><button type="button" class="deleteBtn"><i class="material-icons-outlined">delete</i></button></td>
                             </tr>
                         `);
@@ -98,9 +96,9 @@
             });
 
             // Event triggered when file is selected.
-            fileUploadDiv.find(`#${fileUploadId}`).change(function () {
-                handleFiles(this.files);
-            });
+            //fileUploadDiv.find(`#${fileUploadId}`).change(function () {
+            //    handleFiles(this.files);
+            //});
         });
     };
 })(jQuery);

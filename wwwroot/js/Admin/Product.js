@@ -136,6 +136,8 @@ $(function () {
                         }
                         $modal.find('.tblVariant tbody').html(htmlVariant);
                         $page.EditVariant();
+
+                        $img.drawTable(res.Body.Data.Images);
                         $modal.modal('show');
                     }
                     else {
@@ -163,7 +165,7 @@ $(function () {
                     }
                 })
 
-                
+
             })
         },
         DeleteClick: () => {
@@ -202,6 +204,7 @@ $(function () {
                 $modal.validate().resetForm();
                 $modal.find('.error').removeClass('error');
                 $modal.find('.tblVariant tbody').html(`<tr><td class="text-center" colspan="5">Không có dữ liệu</td></tr>`);
+                $img.table.find('tbody').html('');
             })
         },
         GetDataInput: () => {
@@ -209,7 +212,7 @@ $(function () {
                 return false;
             }
             let formData = new FormData();
-            
+
             let data = GetFormDataToObject($form);
             formData.append('product', JSON.stringify(data));
 
@@ -226,7 +229,7 @@ $(function () {
 
             formData.append('attrs', JSON.stringify(attrValue));
 
-            var files = $modal.find("#fileUpload #fileUpload-1")[0].files;
+            //var files = $modal.find("#fileUpload #fileUpload-1")[0].files;
             for (var i = 0; i < files.length; i++) {
                 formData.append("images", files[i]); // "images" phải trùng tên với param ở Controller
             }
@@ -279,7 +282,100 @@ $(function () {
         }
     };
 
+    var files = []; 
+    var $img = {
+        init: function () {
+            $img.onChange();
+        },
+        table: $modal.find('#tblImg'),
+        drawTable: function (images) {
+            $.each(images, function (index, item) {
+                var fileName = item.ImageName;
+                var fileSize = "... KB";
+                var preview = `<img src="${item.ImageUrl}" alt="${fileName}" height="30">`;
+
+                $img.table.find('tbody').append(`
+                            <tr data-id="${item.Id}">
+                                <td class="text-center">${index + 1}</td>
+                                <td>${fileName}</td>
+                                <td class="text-center">${preview}</td>
+                                <td>${fileSize}</td>
+                                <td class="text-center"><button type="button" class="btn btn-delete" data-id="${item.Id}" title="Xóa"><i class="far fa-trash red"></i></button></td>
+                            </tr>
+                        `);
+            });
+            $img.deleteImg();
+            $img.reindexTable();
+        },
+        deleteImg: function () {
+            $img.table.find('tbody tr .btn-delete').off('click').on('click', function () {
+                let id = $(this).data('id');
+                let $tr = $(this).closest('tr');
+                if (!id) {
+
+                    const index = $(this).data("index");
+                    files.splice(index, 1); // xóa file khỏi mảng
+                    // Tạo lại FileList mới từ selectedFiles
+                    const dt = new DataTransfer();
+                    files.forEach(f => dt.items.add(f));
+                    $("#fileUpload-1")[0].files = dt.files;
+                    $("#fileUpload-1").trigger('change');
+                    return false;
+                }
+                var getResponse = AjaxConfigHelper.SendRequestToServer(`/${$router}/RemoveImg`, "POST", { 'id': id });
+                getResponse.then((res) => {
+                    if (res.IsOk) {
+                        $tr.remove();
+                    }
+                    else {
+
+                    }
+                })
+            })
+        },
+        onChange: function () {
+            $modal.find("#fileUpload-1").on('change', function () {
+                $img.removeCache();
+                files = Array.from(this.files);
+                $.each(files, function (index, file) {
+                    var fileName = file.name;
+                    var fileSize = (file.size / 1024).toFixed(2) + " KB";
+                    var fileType = file.type;
+                    var preview = fileType.startsWith("image")
+                        ? `<img src="${URL.createObjectURL(file)}" alt="${fileName}" height="30">`
+                        : `<i class="material-icons-outlined">visibility_off</i>`;
+
+                    $img.table.find('tbody').append(`
+                            <tr>
+                                <td class="text-center">${index + 1}</td>
+                                <td>${fileName}</td>
+                                <td class="text-center">${preview}</td>
+                                <td>${fileSize}</td>
+                                <td class="text-center"><button type="button" class="btn btn-delete" data-index="${index}" title="Xóa"><i class="far fa-trash red"></i></button></td>
+                            </tr>
+                        `);
+                });
+                $img.deleteImg();
+                $img.reindexTable();
+            })
+        },
+        removeCache: function () {
+            $img.table.find('tbody tr').each(function (i, e) {
+                let id = $(e).data('id');
+                if (!id) {
+
+                    $(e).remove();
+                }
+            })
+        },
+        reindexTable: function () {
+            $img.table.find('tbody tr').each(function (i, e) {
+                $(e).find('td').eq(0).html(i + 1);
+            })
+        }
+    }
 
     $page.init();
     $ChiTiet.init();
+    $img.init();
 });
