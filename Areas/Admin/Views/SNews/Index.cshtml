@@ -1,0 +1,94 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using ShopAdmin.Common
+
+@{
+    var routeValues = ViewContext.RouteData.Values;
+    string controller = (string)routeValues["controller"];
+    ViewData["Title"] = AppMenu.ListMenu.FirstOrDefault(x => x.Controller == controller)?.ControllerName ?? "Trang chủ";
+}
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+
+<div class="mx-ecus">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title bold">@ViewBag.Title</div>
+            <div class="card-right">
+                <button class="btn btn-primary" id="btn-add" type="button" data-bs-toggle="modal" data-bs-target="#CHITIET"><i class="icon-add-ico-tsd"></i><span class="ml8">Thêm mới</span></button>
+            </div>
+        </div>
+        <div class="card-body" style="max-height: 929px;">
+            <div class="frame-header">
+                <div class="frame-search">
+                    <input name="Ten" placeholder="Tên danh mục" class="item-search wid240px" autocomplete="off" />
+                    <button class="btn btn-primary btnSearch" type="button"><i class="icon-search-ico-tsd"></i></button>
+                </div>
+            </div>
+            <div class="frame-body has-scroll" style="">
+                <table class="width100" id="TBLDANHSACH">
+                    <thead>
+                        <tr>
+                            <th class="width70px text-center">STT</th>
+                            <th class="wid100px text-center">Thao tác</th>
+                            <th class="text-center ">Tiêu đề</th>
+                            <th class="text-center ">Ngày tạo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="frame-footer">
+                @await Html.PartialAsync("_PaginationPartial")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-edit left fade" id="CHITIET" role="dialog" aria-labelledby="exampleModalLabel" data-bs-keyboard="true" aria-bs-hidden="true" data-bs-backdrop="static" style="padding-top: 42px !important;">
+    <div class="modal-dialog modal-lg modal-dialog-slideout" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">
+                    Thông tin danh mục
+                </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="icon-close-ico-tsd"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background-color: #FBFBFB">
+                <div class="modal-body-content" style="padding: 16px; background-color: #FFFFFF;height: 100%;">
+                    <form id="ModalForm">
+                        <input name="Id" class="hidden" value="" />
+                        <div class="row">
+                            <div class="col-md-6">Tiêu đề <span class="red">*</span></div>
+                        </div>
+                        <div class="row mb16">
+                            <div class="col-md-12">
+                                <input type="text" maxlength="100" name="Title" class="wid100" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">Nội dung</div>
+                        </div>
+                        <div class="row mb16">
+                            <div class="col-md-12">
+                                <div id="edit"></div>
+                                <textarea type="text" name="ContentNews" id="Content" class="wid100"></textarea>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="icon-close-ico-tsd"></i><span class="ml8">Đóng</span></button>
+                <button type="button" class="btn btn-primary" id="btn-save"><i class="icon-save-ico-tsd"></i><span class="ml8">Lưu lại</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script src="~/js/Admin/SNews.js"></script>
+}

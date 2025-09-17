@@ -111,6 +111,11 @@ app.MapControllerRoute(
     defaults: new { controller = "News", action = "Index", area = "User" }
 );
 app.MapControllerRoute(
+    name: "tin-tuc-chi-tiet",
+    pattern: "tin-tuc/{title}-n{id}",
+    defaults: new { controller = "News", action = "ViewDetail", area = "User" }
+);
+app.MapControllerRoute(
     name: "chinh-sach-bao-mat",
     pattern: "chinh-sach-bao-mat",
     defaults: new { controller = "About", action = "ChinhSachBaoMat", area = "User" }

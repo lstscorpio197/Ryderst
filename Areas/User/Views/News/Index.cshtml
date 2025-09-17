@@ -1,5 +1,43 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using ShopAdmin.Helper
+@model List<SNew>
+
+<style>
+    .news-item{
+        background-color: #f1f1f1;
+        border: 1px dotted;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+        .news-item .news-title{
+            margin:0;
+            font-weight: bold;
+        }
+
+        .news-item .news-time{
+            color: #ababab;
+            font-size: 13px;
+        }
+
+        .news-item + .news-item{
+            margin-top:16px;
+        }
+</style>
+
+<section class="products">
+    <div class="container">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var item = Model[i];
+            <a class="news-item d-block" href="tin-tuc/@(SlugHelper.GenerateSlug(item.Title))-n@(item.Id)">
+                <p class="news-title">@item.Title</p>
+                <span class="news-time">@item.CreatedTime.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                <div>
+                    
+                </div>
+            </a>
+        }
+    </div>
+</section>
+

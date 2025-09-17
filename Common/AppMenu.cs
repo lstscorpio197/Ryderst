@@ -10,6 +10,7 @@
             new Menu(0,1,"SPermission","Quản lý quyền"),
             new Menu(2,null,"DM","Danh mục",0, "fa fa-list"),
             new Menu(0,2,"Category","Danh mục sản phẩm"),
+            new Menu(0,2,"SNews","Danh mục tin tức"),
             new Menu(0,2,"Collection","Bộ sưu tập"),
             new Menu(3,null,"Product","Quản lý sản phẩm",1, "fas fa-tshirt"),
             new Menu(4,null,"Order","Quản lý đơn hàng",1, "fa fa-shopping-cart"),

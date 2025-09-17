@@ -1,0 +1,13 @@
+﻿@using ShopAdmin.Helper
+@model SNew
+
+<section class="">
+    <div class="container">
+        <h3>@Model.Title</h3>
+        <p>Ngày đăng: @Model.CreatedTime.ToString("dd/MM/yyyy")</p>
+        <div>
+            @Html.Raw(Model.ContentNews)
+        </div>
+    </div>
+</section>
+
