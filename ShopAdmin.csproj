@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\Shop\custom-mobile.css" />
     <_ContentIncludedByDefault Remove="wwwroot\js\Admin\Product.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\Shop\checkout.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\Shop\product.js" />

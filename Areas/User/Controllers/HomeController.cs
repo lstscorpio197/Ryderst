@@ -25,7 +25,7 @@ namespace ShopAdmin.Areas.User.Controllers
                     Name = x.Name,
                     Price = x.Price,
                     ImageUrl = new List<string> { x.Images.Select(x => x.ImageUrl).FirstOrDefault() }
-                }).OrderByDescending(p => p.Id).Skip(0).Take(10).ToListAsync().ConfigureAwait(false);
+                }).OrderByDescending(p => p.Id).Skip(0).Take(12).ToListAsync().ConfigureAwait(false);
                 return products;
             }
         }
@@ -34,7 +34,7 @@ namespace ShopAdmin.Areas.User.Controllers
         {
             using (var db = new ShopDbContext())
             {
-                var products = await db.Products.Include(x => x.Images).AsNoTracking().OrderByDescending(p => p.Sales).Skip(0).Take(10).Select(x => new ProductDto
+                var products = await db.Products.Include(x => x.Images).AsNoTracking().OrderByDescending(p => p.Sales).Skip(0).Take(12).Select(x => new ProductDto
                 {
                     Id = x.Id,
                     Name = x.Name,

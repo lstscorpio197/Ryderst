@@ -1,0 +1,9 @@
+﻿img{
+    max-width:100%;
+}
+
+@media screen and (max-width: 480px) {
+    .wrap-addcart button {
+        font-size: 13px;
+    }
+}
