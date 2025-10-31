@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ShopAdmin.Authorize;
+using ShopAdmin.Common;
 using ShopAdmin.Dto;
 using ShopAdmin.Dto.Products;
 using ShopAdmin.Helper;
@@ -31,11 +32,12 @@ namespace ShopAdmin.Areas.Admin.Controllers
                 }
                 var result = await query.Select(x => new
                 {
-                    Id = x.Id,
-                    SKU = x.SKU,
-                    Name = x.Name,
-                    Price = x.Price,
-                    Quantity = x.Quantity,
+                    x.Id,
+                    x.SKU,
+                    x.Name,
+                    Price = x.Price.ToStringNumber(),
+                    PriceDiscount = x.PriceDiscount.HasValue ? x.PriceDiscount.ToStringNumber() : x.Price.ToStringNumber(),
+                    x.Quantity,
                     CategoryName = x.Category.Name
                 }).OrderBy(x => x.Id).Skip(itemSearch.Skip).Take(itemSearch.PageSize).ToListAsync().ConfigureAwait(false);
                 httpMessage.Body.Data = result;
@@ -131,7 +133,7 @@ namespace ShopAdmin.Areas.Admin.Controllers
                     var productVariants = attributes.Select(x => new ProductVariant
                     {
                         ProductId = entity.Id,
-                        Price = entity.Price,
+                        Price = entity.PriceDiscount.HasValue && entity.PriceDiscount > 0 ? entity.PriceDiscount.Value : entity.Price,
                         Quantity = entity.Quantity,
                         Sku = $"{entity.SKU}-{string.Join('-', x)}",
                         Stock = entity.Stock,
@@ -178,23 +180,30 @@ namespace ShopAdmin.Areas.Admin.Controllers
                     item.Stock = entity.Stock;
                     item.Description = entity.Description;
                     item.Price = entity.Price;
+                    item.PriceDiscount = entity.PriceDiscount;
 
                     db.Entry(item).State = EntityState.Modified;
-                    await db.SaveChangesAsync();
+                    await db.SaveChangesAsync().ConfigureAwait(false);
 
                     var productImages = await SaveImage(db, images, entity.SKU);
                     productImages.ForEach(x => x.ProductId = item.Id);
-                    await db.ProductImages.AddRangeAsync(productImages);
-                    await db.SaveChangesAsync();
+                    await db.ProductImages.AddRangeAsync(productImages).ConfigureAwait(false);
+                    await db.SaveChangesAsync().ConfigureAwait(false);
 
-                    await tran.CommitAsync();
+                    var productVariants = await db.ProductVariants.Where(x => x.ProductId == item.Id).ToListAsync().ConfigureAwait(false);
+                    productVariants.ForEach(x =>
+                    {
+                        x.Price = entity.PriceDiscount.HasValue && entity.PriceDiscount > 0 ? entity.PriceDiscount.Value : entity.Price;
+                    });
+                    await db.SaveChangesAsync().ConfigureAwait(false);
+                    await tran.CommitAsync().ConfigureAwait(false);
 
                     httpMessage.Body.MsgNoti = new HttpMessageNoti("200", null, "Cập nhật thành công");
                     return Json(httpMessage);
                 }
                 catch (Exception ex)
                 {
-                    await tran.RollbackAsync();
+                    await tran.RollbackAsync().ConfigureAwait(false);
                     httpMessage.IsOk = false;
                     httpMessage.Body.MsgNoti = new HttpMessageNoti("500", null, ex.Message);
                     return Json(httpMessage);

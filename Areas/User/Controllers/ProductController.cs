@@ -23,9 +23,10 @@ namespace ShopAdmin.Areas.User.Controllers
 
                 var products = await db.Products.Include(x => x.Images).AsNoTracking().Where(x => x.CategoryId == cateId && x.Id != id).Select(x => new
                 {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Price = x.Price,
+                    x.Id,
+                    x.Name,
+                    x.Price,
+                    x.PriceDiscount,
                     ImageUrl = x.Images.Select(x => x.ImageUrl).FirstOrDefault(),
                     Slug = SlugHelper.GenerateSlug(x.Name)
                 }).OrderBy(p => Guid.NewGuid()).Skip(0).Take(6).ToListAsync().ConfigureAwait(false);
@@ -44,6 +45,7 @@ namespace ShopAdmin.Areas.User.Controllers
                     Id = product.Id,
                     Name = product.Name,
                     Price = product.Price,
+                    PriceDiscount = product.PriceDiscount,
                     Description = product.Description,
                     CategoryId = product.CategoryId,
                     CategoryName = product.Category.Name,

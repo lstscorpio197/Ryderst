@@ -2,7 +2,9 @@
 @using ShopAdmin.Dto.Products
 
 @model ProductDto
-
+@{
+    var isSaleOff = Model.PriceDiscount.HasValue && Model.PriceDiscount > 0;
+}
 <div class="productDetail-page tp_product_detail" data-id="@(Model.Id)">
     <div class="breadcrumb-shop clearfix">
         <div class="container">
@@ -41,7 +43,15 @@
                         </div>
 
                         <div class="product-price">
-                            <span class="pro-price tp_product_detail_price">@Model.Price.ToStringNumber() ₫</span>
+                            @if (isSaleOff)
+                            {
+                                <span class="original-price">@Model.Price.ToStringNumber() ₫</span>
+                                <span class="pro-price tp_product_detail_price">@Model.PriceDiscount.ToStringNumber() ₫</span>
+                            }
+                            else
+                            {
+                                <span class="pro-price tp_product_detail_price">@Model.Price.ToStringNumber() ₫</span>
+                            }
                         </div>
 
                         <form id="add-item-form" class="variants clearfix">

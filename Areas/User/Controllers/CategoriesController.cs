@@ -29,6 +29,7 @@ namespace ShopAdmin.Areas.User.Controllers
                     Id = x.Id,
                     Name = x.Name,
                     Price = x.Price,
+                    PriceDiscount = x.PriceDiscount,
                     ImageUrl = new List<string> { x.Images.Select(x => x.ImageUrl).FirstOrDefault() }
                 });
                 switch (sort)

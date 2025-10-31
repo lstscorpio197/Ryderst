@@ -1,6 +1,7 @@
 ﻿@using ShopAdmin.Common
 @using ShopAdmin.Dto.Categories
 @using ShopAdmin.Dto.Products
+@using ShopAdmin.Helper
 
 @model CategoryProductDto
 
@@ -30,16 +31,28 @@
 
                 @foreach (var product in Model.Products)
                 {
-                    <div class="product-card fade-in" data-product="@product.Id" data-name="@product.Name">
+                    var isSaleOff = product.PriceDiscount.HasValue && product.PriceDiscount > 0;
+
+                    <div class="product-card fade-in" data-product="@product.Id" data-name="@(SlugHelper.GenerateSlug(product.Name))">
                         <div style="position: relative;">
                             <img src="@(product.ImageUrl.FirstOrDefault())" alt="@product.Name" class="product-image">
-                            @* <div class="product-badge badge-sale">SALE</div> *@
+                            @if (isSaleOff)
+                            {
+                                <div class="product-badge badge-sale">SALE</div>
+                            }
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">@product.Name</h3>
                             <div class="product-price">
-                                <span class="current-price">@(product.Price)&nbsp;₫</span>
-
+                                @if (isSaleOff)
+                                {
+                                    <span class="original-price">@(product.Price.ToStringNumber())&nbsp;₫</span>
+                                    <span class="current-price">@(product.PriceDiscount.ToStringNumber())&nbsp;₫</span>
+                                }
+                                else
+                                {
+                                    <span class="current-price">@(product.Price.ToStringNumber())&nbsp;₫</span>
+                                }
                             </div>
                             @* <div class="product-rating">
                     <span class="stars">★★★★☆</span>
@@ -51,7 +64,7 @@
                 }
             </div>
         }
-        
+
     </div>
 </section>
 

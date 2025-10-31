@@ -82,7 +82,8 @@ $(function () {
                             `</td>` +
                             `<td class="">${item.SKU}</td>` +
                             `<td class="">${item.Name}</td>` +
-                            `<td class="">${item.Price || ''}</td>` +
+                            `<td class="text-end">${item.Price || ''}</td>` +
+                            `<td class="text-end">${item.PriceDiscount || ''}</td>` +
                             `<td class="">${item.Quantity || ''}</td>` +
                             `<td class="">${item.CategoryName || ''}</td>` +
                             //`<td class="text-center">${htmlShow}</td>` +

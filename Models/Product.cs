@@ -10,6 +10,7 @@ namespace ShopAdmin.Models
         public string Slug { get; set; } // dùng cho URL
         public string Description { get; set; }
         public decimal Price { get; set; }
+        public decimal? PriceDiscount { get; set; }
         public string SKU { get; set; } // mã sản phẩm
         public int Quantity { get; set; }
         public int Stock { get; set; }

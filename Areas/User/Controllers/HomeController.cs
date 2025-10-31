@@ -24,6 +24,7 @@ namespace ShopAdmin.Areas.User.Controllers
                     Id = x.Id,
                     Name = x.Name,
                     Price = x.Price,
+                    PriceDiscount = x.PriceDiscount,
                     ImageUrl = new List<string> { x.Images.Select(x => x.ImageUrl).FirstOrDefault() }
                 }).OrderByDescending(p => p.Id).Skip(0).Take(12).ToListAsync().ConfigureAwait(false);
                 return products;
@@ -39,6 +40,7 @@ namespace ShopAdmin.Areas.User.Controllers
                     Id = x.Id,
                     Name = x.Name,
                     Price = x.Price,
+                    PriceDiscount = x.PriceDiscount,
                     ImageUrl = new List<string> { x.Images.Select(x => x.ImageUrl).FirstOrDefault() }
                 }).ToListAsync().ConfigureAwait(false);
                 return products;
