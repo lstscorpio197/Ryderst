@@ -1,0 +1,24 @@
+﻿.collection-items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.collection-item {
+    cursor: pointer;
+}
+
+    .collection-item img {
+        width: 100%; /* Set width to 100% of the grid item */
+        height: auto; /* Maintain aspect ratio */
+    }
+
+    .collection-item p {
+        font-weight: 600;
+    }
+
+@media (max-width: 768px) {
+    .collection-items {
+        grid-template-columns: 1fr; /* Display each item in a single row on mobile */
+    }
+}

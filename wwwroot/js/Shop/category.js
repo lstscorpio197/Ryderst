@@ -15,7 +15,6 @@
     changeSort: function () {
         $category.self.find('#sortSelect').off('change').on('change', function () {
             let value = $(this).val();
-            console.log(window.location);
             let pathName = window.location.pathname;
             if (pathName.indexOf('page') > -1) {
                 window.location = pathName + `&sort=${value}`;

@@ -111,9 +111,19 @@ app.MapControllerRoute(
     defaults: new { controller = "News", action = "Index", area = "User" }
 );
 app.MapControllerRoute(
+    name: "bo-suu-tap",
+    pattern: "bo-suu-tap",
+    defaults: new { controller = "Collection", action = "Index", area = "User" }
+);
+app.MapControllerRoute(
     name: "tin-tuc-chi-tiet",
     pattern: "tin-tuc/{title}-n{id}",
     defaults: new { controller = "News", action = "ViewDetail", area = "User" }
+);
+app.MapControllerRoute(
+    name: "bo-suu-tap-chi-tiet",
+    pattern: "bo-suu-tap/{slug}-cl{id}",
+    defaults: new { controller = "Collection", action = "ViewDetail", area = "User" }
 );
 app.MapControllerRoute(
     name: "chinh-sach-bao-mat",

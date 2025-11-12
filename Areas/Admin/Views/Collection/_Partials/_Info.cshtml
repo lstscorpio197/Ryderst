@@ -1,0 +1,38 @@
+﻿<div class="tab-pane fade show active" id="info" role="tabpanel">
+    <div class="modal-body-content" style="padding: 16px; background-color: #FFFFFF;height: 100%;">
+        <form id="ModalForm">
+            <input name="Id" class="hidden" value="0" />
+            <div class="row">
+                <div class="col-md-6">Tên bộ sưu tập <span class="red">*</span></div>
+            </div>
+            <div class="row mb16">
+                <div class="col-md-12">
+                    <input type="text" maxlength="100" name="Name" class="wid100" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">Mô tả</div>
+            </div>
+            <div class="row mb16">
+                <div class="col-md-12">
+                    <div id="edit"></div>
+                    <textarea type="text" name="Description" id="Description" class="wid100"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">Thumbnail</div>
+            </div>
+            <div class="row mb16">
+                <div class="col-md-12">
+                    <input type="file" class="hidden" name="ThumbnailFile" accept="image/png, image/jpeg, image/jpg" />
+                    <input type="text" name="Thumbnail" class="wid100 hidden" />
+                    <div class="btn btn-outline-primary border btnChooseFile">Chọn ảnh</div>
+                    <div class="wid100 image-preview">
+                        <img class="wid100" id="previewImage" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

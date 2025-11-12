@@ -43,7 +43,7 @@
 </div>
 
 <div class="modal modal-edit left fade" id="CHITIET" role="dialog" aria-labelledby="exampleModalLabel" data-bs-keyboard="true" aria-bs-hidden="true" data-bs-backdrop="static" style="padding-top: 42px !important;">
-    <div class="modal-dialog modal-sm modal-dialog-slideout" role="document">
+    <div class="modal-dialog modal-md modal-dialog-slideout" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="exampleModalLabel">
@@ -54,27 +54,23 @@
                 </button>
             </div>
             <div class="modal-body" style="background-color: #FBFBFB">
-                <div class="modal-body-content" style="padding: 16px; background-color: #FFFFFF;height: 100%;">
-                    <form id="ModalForm">
-                        <input name="Id" class="hidden" value="" />
-                        <div class="row">
-                            <div class="col-md-6">Tên bộ sưu tập <span class="red">*</span></div>
-                        </div>
-                        <div class="row mb16">
-                            <div class="col-md-12">
-                                <input type="text" maxlength="100" name="Name" class="wid100" />
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">Chuỗi ký tự (URL)</div>
-                        </div>
-                        <div class="row mb16">
-                            <div class="col-md-12">
-                                <input type="text" maxlength="100" name="Slug" class="wid100" readonly />
-                            </div>
-                        </div>
-                    </form>
+                <ul class="nav nav-tabs" id="productTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info"
+                                type="button" role="tab">
+                            Thông tin
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="desc-tab" data-bs-toggle="tab" data-bs-target="#product"
+                                type="button" role="tab">
+                            Sản phẩm
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content pt-3" id="productTabContent" style="height: calc(100% - 50px); overflow:auto;">
+                    @await Html.PartialAsync("_Partials/_Info.cshtml")
+                    @await Html.PartialAsync("_Partials/_Products.cshtml")
                 </div>
             </div>
             <div class="modal-footer">

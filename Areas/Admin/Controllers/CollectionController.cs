@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ShopAdmin.Authorize;
 using ShopAdmin.Dto;
 using ShopAdmin.Dto.Collections;
@@ -57,12 +58,16 @@ namespace ShopAdmin.Areas.Admin.Controllers
             try
             {
                 var item = await db.Collections.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+
                 if (item == null)
                 {
                     httpMessage.IsOk = false;
                     httpMessage.Body.MsgNoti = new HttpMessageNoti("400", null, "Không tìm thấy thông tin");
                     return Json(httpMessage);
                 }
+
+                item.Products = await db.Products.AsNoTracking().Where(x => x.CollectionId == item.Id).ToListAsync().ConfigureAwait(false);
+
                 httpMessage.Body.Data = item;
                 return Json(httpMessage);
             }
@@ -103,11 +108,17 @@ namespace ShopAdmin.Areas.Admin.Controllers
 
         [HttpPost]
         [AuthorizeAccessRole(typeHandle: "create")]
-        public async Task<JsonResult> Create(CreateOrUpdateCollectionDto input)
+        public async Task<JsonResult> Create([FromForm] IFormFile file)
         {
             HttpMessage httpMessage = new HttpMessage(true);
             try
             {
+                string dataInput = HttpContext.Request.Form["data"].ToString();
+                CreateOrUpdateCollectionDto input = JsonConvert.DeserializeObject<CreateOrUpdateCollectionDto>(dataInput);
+
+                string stringIds = HttpContext.Request.Form["productIds"].ToString();
+                List<long> productIds = JsonConvert.DeserializeObject<List<long>>(stringIds);
+
                 httpMessage = await CheckValid(input);
                 if (!httpMessage.IsOk)
                 {
@@ -117,8 +128,14 @@ namespace ShopAdmin.Areas.Admin.Controllers
                 {
                     Id = input.Id,
                     Name = input.Name,
-                    Slug = StringConverter.ConvertToSlug(input.Name)
+                    Slug = StringConverter.ConvertToSlug(input.Name),
+                    Thumbnail = UploadImage(file),
+                    Description = input.Description
                 };
+
+                var products = await db.Products.Where(x => productIds.Contains(x.Id)).ToListAsync().ConfigureAwait(false);
+                item.Products = products;
+
                 await db.Collections.AddAsync(item);
                 await db.SaveChangesAsync().ConfigureAwait(false);
                 httpMessage.Body.MsgNoti = new HttpMessageNoti("200", null, "Thêm mới thành công");
@@ -134,18 +151,24 @@ namespace ShopAdmin.Areas.Admin.Controllers
 
         [HttpPost]
         [AuthorizeAccessRole(typeHandle: "update")]
-        public async Task<JsonResult> Update(CreateOrUpdateCollectionDto input)
+        public async Task<JsonResult> Update([FromForm] IFormFile file)
         {
             HttpMessage httpMessage = new HttpMessage(true);
             try
             {
+                string dataInput = HttpContext.Request.Form["data"].ToString();
+                CreateOrUpdateCollectionDto input = JsonConvert.DeserializeObject<CreateOrUpdateCollectionDto>(dataInput);
+
+                string stringIds = HttpContext.Request.Form["productIds"].ToString();
+                List<long> productIds = JsonConvert.DeserializeObject<List<long>>(stringIds);
+
                 httpMessage = await CheckValid(input);
                 if (!httpMessage.IsOk)
                 {
                     return Json(httpMessage);
                 }
 
-                var exist = await db.Collections.FindAsync(input.Id).ConfigureAwait(false);
+                var exist = await db.Collections.Include(x => x.Products).FirstOrDefaultAsync(x => x.Id == input.Id).ConfigureAwait(false);
                 if (exist == null)
                 {
                     httpMessage.IsOk = false;
@@ -154,7 +177,13 @@ namespace ShopAdmin.Areas.Admin.Controllers
                 }
 
                 exist.Name = input.Name;
-                exist.Slug = input.Slug;
+                exist.Slug = StringConverter.ConvertToSlug(input.Name);
+                exist.Description = input.Description;
+                exist.Thumbnail = string.IsNullOrEmpty(input.Thumbnail) ? UploadImage(file) : input.Thumbnail;
+
+                var products = await db.Products.Where(x => productIds.Contains(x.Id)).ToListAsync().ConfigureAwait(false);
+                exist.Products = products;
+
                 db.Entry(exist).State = EntityState.Modified;
                 await db.SaveChangesAsync().ConfigureAwait(false);
                 httpMessage.Body.MsgNoti = new HttpMessageNoti("200", null, "Cập nhập thông tin thành công");
@@ -168,6 +197,49 @@ namespace ShopAdmin.Areas.Admin.Controllers
             }
         }
 
+        public async Task<JsonResult> GetListProduct()
+        {
+            HttpMessage httpMessage = new HttpMessage(true);
+            try
+            {
+                var products = await db.Products.AsNoTracking().Select(x => new
+                {
+                    x.Id,
+                    x.Name,
+                    x.SKU
+                }).ToListAsync().ConfigureAwait(false);
+                httpMessage.Body.Data = products;
+                return Json(httpMessage);
+            }
+            catch (Exception ex)
+            {
+                httpMessage.IsOk = false;
+                httpMessage.Body.MsgNoti = new HttpMessageNoti("500", null, ex.Message);
+                return Json(httpMessage);
+            }
+        }
+
+        private string UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return string.Empty;
+
+            var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(uploadsPath))
+                Directory.CreateDirectory(uploadsPath);
+
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadsPath, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            // Trả về URL để Summernote chèn vào content
+            var url = "/uploads/" + fileName;
+            return url;
+        }
         private async Task<HttpMessage> CheckValid(CreateOrUpdateCollectionDto item)
         {
             HttpMessage httpMessage = new HttpMessage(false);
