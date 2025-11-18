@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace ShopAdmin.WHttpMessage
+﻿namespace ShopAdmin.WHttpMessage
 {
     public class HttpMessageBody
     {
         public object Data { get; set; }
 
         public string Description { get; set; }
+        public string Description2 { get; set; }
 
         public HttpMessagePagination Pagination { get; set; }
 

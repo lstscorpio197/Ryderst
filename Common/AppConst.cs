@@ -14,6 +14,9 @@
 
         public static string ZBulkName = "116;301-DGDSGSR";
         public static string ZBulkKey = "ADA3D50-121A4FA-B2A4464-306B22D-2B98";
+
+
+        public const decimal ShippingFee = 30000;
     }
 
     public class ChucVu

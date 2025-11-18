@@ -26,9 +26,13 @@ namespace ShopAdmin.Areas.Admin.Controllers
             try
             {
                 var query = db.Products.Include(x => x.Category).AsNoTracking().Where(x => true);
+                if (!string.IsNullOrEmpty(itemSearch.Ma))
+                {
+                    query = query.Where(x => x.SKU.Contains(itemSearch.Ma));
+                }
                 if (!string.IsNullOrEmpty(itemSearch.Ten))
                 {
-                    query = query.Where(x => x.SKU.Contains(itemSearch.Ma) || x.Name.Contains(itemSearch.Ten));
+                    query = query.Where(x => x.Name.Contains(itemSearch.Ten));
                 }
                 var result = await query.Select(x => new
                 {

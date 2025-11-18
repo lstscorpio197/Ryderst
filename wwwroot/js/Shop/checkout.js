@@ -113,7 +113,7 @@
                     $checkout.drawItems(res.Body.Data);
                     $checkout.self.find('#OriginPrice').text(res.Body.Description);
                     $checkout.self.find('#DiscountValue').text(0);
-                    $checkout.self.find('#TotalValue').text(res.Body.Description);
+                    $checkout.self.find('#TotalValue').text(res.Body.Description2);
 
                     $cart.renderCartItems(res.Body.Data, res.Body.Description);
                 }
@@ -133,7 +133,7 @@
                     $checkout.drawItems(res.Body.Data);
                     $checkout.self.find('#OriginPrice').text(res.Body.Description);
                     $checkout.self.find('#DiscountValue').text(0);
-                    $checkout.self.find('#TotalValue').text(res.Body.Description);
+                    $checkout.self.find('#TotalValue').text(res.Body.Description2);
 
                     $cart.renderCartItems(res.Body.Data, res.Body.Description);
                 }

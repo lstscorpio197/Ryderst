@@ -47,8 +47,6 @@ namespace ShopAdmin.Areas.User.Controllers
                     return Json(httpMessage);
                 }
 
-                decimal shippingFee = 30000;
-
                 if (coupon.Ratio.HasValue && coupon.Ratio > 0)
                 {
                     var discoutValue = totalPrice * coupon.Ratio / 100;
@@ -57,19 +55,19 @@ namespace ShopAdmin.Areas.User.Controllers
                         discoutValue = coupon.MaximumValue;
 
                     httpMessage.IsOk = true;
-                    httpMessage.Body.Data = new { DiscoutValue = discoutValue.ToStringNumber(), TotalValue = (totalPrice - discoutValue + shippingFee).ToStringNumber() };
+                    httpMessage.Body.Data = new { DiscoutValue = discoutValue.ToStringNumber(), TotalValue = (totalPrice - discoutValue + AppConst.ShippingFee).ToStringNumber() };
                     return Json(httpMessage);
                 }
 
                 if (coupon.DiscountPrice.HasValue)
                 {
                     httpMessage.IsOk = true;
-                    httpMessage.Body.Data = new { DiscoutValue = coupon.DiscountPrice.ToStringNumber(), TotalValue = (totalPrice - coupon.DiscountPrice + shippingFee).ToStringNumber() };
+                    httpMessage.Body.Data = new { DiscoutValue = coupon.DiscountPrice.ToStringNumber(), TotalValue = (totalPrice - coupon.DiscountPrice + AppConst.ShippingFee).ToStringNumber() };
                     return Json(httpMessage);
                 }
 
                 httpMessage.IsOk = true;
-                httpMessage.Body.Data = new { DiscoutValue = "0", TotalValue = (totalPrice + shippingFee).ToStringNumber() };
+                httpMessage.Body.Data = new { DiscoutValue = "0", TotalValue = (totalPrice + AppConst.ShippingFee).ToStringNumber() };
                 return Json(httpMessage);
             }
         }
@@ -93,8 +91,6 @@ namespace ShopAdmin.Areas.User.Controllers
                             return Json(httpMessage);
                         }
 
-                        decimal shippingFee = 30000;
-
                         var order = new Order
                         {
                             FullName = input.FullName,
@@ -106,13 +102,13 @@ namespace ShopAdmin.Areas.User.Controllers
                             Status = (int)OrderStatus.DaDatHang,
                             PaymentStatus = (int)PaymentStatus.ChuaThanhToan,
                             PaymentType = (int)PaymentType.COD,
-                            ShippingFee = shippingFee
+                            ShippingFee = AppConst.ShippingFee
                         };
 
                         order.CouponDiscount = await GetCouponDiscount(input.CouponCode, totalPrice, db);
                         order.TotalDiscount = order.CouponDiscount ?? 0 + order.LoyaltyDiscount ?? 0;
 
-                        order.TotalAmout = totalPrice - order.TotalDiscount ?? 0 + shippingFee;
+                        order.TotalAmout = totalPrice + AppConst.ShippingFee - order.TotalDiscount ?? 0;
 
                         order.Items = cartItems.Select(x => new OrderItem
                         {

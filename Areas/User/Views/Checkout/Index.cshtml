@@ -64,9 +64,9 @@
 
         <div class="total-summary">
             <p>Tạm tính: <strong><span id="OriginPrice">@(Model.Sum(x => x.Price * x.Quantity).ToStringNumber())</span> ₫</strong></p>
-            <p>Phí vận chuyển: <strong><span id="ShippingFee">30,000</span> ₫</strong></p>
+            <p>Phí vận chuyển: <strong><span id="ShippingFee">@AppConst.ShippingFee.ToStringNumber()</span> ₫</strong></p>
             <p>Giảm giá: <strong><span id="DiscountValue">0</span> ₫</strong></p>
-            <p>Tổng cộng: <strong><span id="TotalValue">@((Model.Sum(x => x.Price * x.Quantity) + 30000).ToStringNumber())</span> ₫</strong></p>
+            <p>Tổng cộng: <strong><span id="TotalValue">@((Model.Sum(x => x.Price * x.Quantity) + AppConst.ShippingFee).ToStringNumber())</span> ₫</strong></p>
         </div>
 
         <button type="button" form="checkoutForm" id="btnCheckout" class="btn-complete-order">Hoàn tất đơn hàng</button>

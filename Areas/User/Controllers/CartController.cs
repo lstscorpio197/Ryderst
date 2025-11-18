@@ -63,6 +63,7 @@ namespace ShopAdmin.Areas.User.Controllers
             HttpContext.Session.SetObject(AppConst.CartSession, cartItems);
             httpMessage.Body.Data = cartItems;
             httpMessage.Body.Description = cartItems.Sum(x => x.Quantity * x.Price).ToStringNumber();
+            httpMessage.Body.Description2 = (cartItems.Sum(x => x.Quantity * x.Price) + AppConst.ShippingFee).ToStringNumber();
             return Json(httpMessage);
         }
 
@@ -81,6 +82,7 @@ namespace ShopAdmin.Areas.User.Controllers
             HttpContext.Session.SetObject(AppConst.CartSession, cartItems);
             httpMessage.Body.Data = cartItems;
             httpMessage.Body.Description = cartItems.Sum(x => x.Quantity * x.Price).ToStringNumber();
+            httpMessage.Body.Description2 = (cartItems.Sum(x => x.Quantity * x.Price) + AppConst.ShippingFee).ToStringNumber();
             return Json(httpMessage);
         }
     }
