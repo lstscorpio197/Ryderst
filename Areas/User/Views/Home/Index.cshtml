@@ -6,6 +6,60 @@
     var lstSPNew = ViewBag.ListSPNew as List<ProductDto>;
     var lstSPBanChay = ViewBag.ListSPBanChay as List<ProductDto>;
 }
+<style>
+    .popup {
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        transition: opacity 0.5s ease;
+        opacity: 0; /* Start with opacity 0 */
+    }
+
+        .popup.show {
+            opacity: 1; /* Change to opacity 1 when shown */
+        }
+
+        .popup .popup-overlay {
+            height: 100%;
+            background-color: #414141;
+            opacity: 0.7;
+            width: 100%;
+            position: fixed;
+        }
+
+        .popup .content {
+            position: relative;
+            margin: auto;
+            place-self: center;
+            height: 100%;
+            align-content: center;
+        }
+
+            .popup .content img {
+                height: calc(100vh * 0.8);
+                cursor: pointer;
+            }
+
+    .close-icon {
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+        z-index: 1001;
+        color: #fff;
+        top: calc(10% + 10px);
+        font-size: 35px;
+    }
+</style>
+
+<div class="popup">
+    <div class="popup-overlay"></div>
+    <div class="content">
+        <img src="/Images/popup.jpg" onclick="window.location.href='/tin-tuc/black-friday-2025-ryder-n12'" />
+        <span class="icon-close-ico-tsd close-icon" title="Đóng" onclick="$('.popup').remove()"></span>
+    </div>
+</div>
 @*
 <section class="hero">
     <div class="hero-content">
@@ -17,7 +71,6 @@
 @*         </div>
     </div>
 </section> *@
-
 <section class="banner">
     <div class="banner-img" style="justify-self: center;">
         <img src="/Images/banner.jpg" />
@@ -103,6 +156,15 @@
     </div>
 </section>
 
+
 @section scripts {
     <script src="/js/Shop/home.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Show the popup after a delay (e.g., 2 seconds)
+            setTimeout(function () {
+                $('.popup').addClass('show');
+            }, 1000); // 2000 milliseconds = 2 seconds
+        });
+    </script>
 }
