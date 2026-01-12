@@ -38,7 +38,7 @@
                         <div class="product-title">
                             <h1>@Model.Name</h1>
                             <div class="pro-soldold">
-                                <span class="statusProduct">Còn hàng</span>
+                                <span class="statusProduct">@(Model.CountInStock > 0 ? "Còn hàng" : "Tạm hết hàng")</span>
                             </div>
                         </div>
 

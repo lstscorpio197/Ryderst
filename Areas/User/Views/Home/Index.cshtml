@@ -55,8 +55,8 @@
 
 <div class="popup">
     <div class="popup-overlay"></div>
-    <div class="content">
-        <img src="/Images/popup.jpg" onclick="window.location.href='/tin-tuc/black-friday-2025-ryder-n12'" />
+    <div class="content" id="popup-content">
+        <img src="/Images/popup.jpg" />
         <span class="icon-close-ico-tsd close-icon" title="Đóng" onclick="$('.popup').remove()"></span>
     </div>
 </div>
@@ -161,10 +161,13 @@
     <script src="/js/Shop/home.js"></script>
     <script>
         $(document).ready(function () {
-            // Show the popup after a delay (e.g., 2 seconds)
-            setTimeout(function () {
-                $('.popup').addClass('show');
-            }, 1000); // 2000 milliseconds = 2 seconds
+            if (showPopup){
+                // Show the popup after a delay (e.g., 2 seconds)
+                setTimeout(function () {
+                    $('.popup').addClass('show');
+                }, 1000); // 2000 milliseconds = 2 seconds
+            }
+            
         });
     </script>
 }

@@ -13,6 +13,7 @@
         public List<string> Tags { get; set; }
 
         public List<AttributeDto> Attributes { get; set; }
+        public int CountInStock { get; set; }
     }
 
 
@@ -20,7 +21,6 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
         public List<ProductAttrDto> ProductAttrs { get; set; }
     }
 

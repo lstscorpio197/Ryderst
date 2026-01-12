@@ -14,3 +14,8 @@ namespace ShopAdmin.Models
         public ProductAttributeValue ProductAttributeValue { get; set; }
     }
 }
+
+//producid = 11
+//=> [ProductVariantsId] = 77 - 88
+//=> { Id, Số lượng}
+//-query[ProductVariantValues] groupby[ProductVariantsId]  => {
