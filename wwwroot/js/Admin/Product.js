@@ -22,6 +22,8 @@ $(function () {
             $page.initGiaoDien();
             $page.BtnSearchClick();
             $page.GetList(1);
+            $page.Sync();
+            $page.SyncProduct();
         },
         initValidate: function () {
             $form.validate({
@@ -187,7 +189,41 @@ $(function () {
 
             })
         },
+        Sync: () => {
+            $page.Self.find('#btn-sync-quantity').off('click').on('click', function () {
+                var getResponse = AjaxConfigHelper.SendRequestToServer(`/${$router}/SyncQuantity`, "POST", null);
+                getResponse.then((res) => {
+                    if (res.IsOk) {
+                        ToastSuccess("Đồng bộ thành công");
 
+                        let skuFailed = res.Body.Data.FailedSkus || [];
+                        let skuSynced = res.Body.Data.SyncedSkus || [];
+                        if (skuFailed.length > 0) {
+                            downloadTextFile("dongboloi.txt", skuFailed.join(',\n '));
+                        }
+                        //if (skuSynced.length > 0) {
+                        //    downloadTextFile("dongbothanhcong.txt", skuSynced.join(', '));
+                        //}
+                    }
+                    else {
+                        ToastError("Đồng bộ không thành công");
+                    }
+                })
+            })
+        },
+        SyncProduct: () => {
+            $page.Self.find('#btn-sync-product').off('click').on('click', function () {
+                var getResponse = AjaxConfigHelper.SendRequestToServer(`/${$router}/SyncProduct`, "POST", null);
+                getResponse.then((res) => {
+                    if (res.IsOk) {
+                        ToastSuccess("Đồng bộ thành công");
+                    }
+                    else {
+                        ToastError("Đồng bộ không thành công");
+                    }
+                })
+            })
+        }
     };
 
     var $ChiTiet = {
@@ -379,4 +415,18 @@ $(function () {
     $page.init();
     $ChiTiet.init();
     $img.init();
+
+
+    function downloadTextFile(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
 });

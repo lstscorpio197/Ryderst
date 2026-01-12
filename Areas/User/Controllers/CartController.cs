@@ -34,6 +34,13 @@ namespace ShopAdmin.Areas.User.Controllers
 
                 var productVariants = await db.ProductVariants.Include(x => x.VariantValues).AsNoTracking().Where(x => x.ProductId == input.ProductId).ToListAsync().ConfigureAwait(false);
                 var item = productVariants.FirstOrDefault(x => string.Join(',', x.VariantValues.Select(y => y.ProductAttributeValueId).OrderBy(y => y)) == string.Join(',', input.ProductAttributeValueIds.OrderBy(y => y))) ?? new ProductVariant();
+                if (item.Quantity < input.Quantity)
+                {
+                    httpMessage.IsOk = false;
+                    httpMessage.Body.Description = "Số lượng trong kho không đủ!";
+                    return Json(httpMessage);
+                }
+
                 var productImg = await db.ProductImages.AsNoTracking().FirstOrDefaultAsync(x => x.ProductId == input.ProductId).ConfigureAwait(false);
                 var itemResult = new CartItemDto { ProductVariantId = item.Id, ProductName = item.Sku, Price = item.Price, Quantity = input.Quantity, ImageUrl = productImg?.ImageUrl, ProductId = input.ProductId };
 

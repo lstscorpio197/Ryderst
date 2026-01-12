@@ -3593,3 +3593,15 @@ select:focus {
         margin-left: 0;
     }
 }
+
+.btn-outline-primary{
+    color: #0078d4;
+    background-color: transparent;
+    border-color: #0078d4;
+}
+
+    .btn-outline-primary:hover {
+        color: #fff;
+        background-color: #0078d4;
+        border-color: #0078d4;
+    }

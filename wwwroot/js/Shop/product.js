@@ -144,10 +144,10 @@
             getResponse.then((res) => {
                 if (res.IsOk) {
                     $cart.renderCartItems(res.Body.Data, res.Body.Description);
-                    toastSuccess('Đã thêm sản phẩm vào giỏ hàng!')
+                    toastSuccess('Đã thêm sản phẩm vào giỏ hàng!');
                 }
                 else {
-
+                    toastWarning(res.Body.Description);
                 }
             })
             

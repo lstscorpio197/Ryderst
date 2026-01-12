@@ -336,3 +336,27 @@ function ToastSuccess(description = '', container = null) {
         }
     });
 }
+function ToastError(description = '', container = null) {
+    description = description != '' ? description : 'Thành công';
+    $.confirm({
+        title: '<i class="fa fa-bell-o"></i> THÔNG BÁO',
+        content: description,
+        type: 'orange',
+        //autoClose: (resultType === 'blue' || resultType == 'green') ? 'close|5000' : 'close|30000',
+        typeAnimated: true,
+        columnClass: 'col-lg-4 col-md-4 col-xs-12', //
+        container: container || $('.content-wrapper'),
+        buttons: {
+            close: {
+                text: '<i class="fa fa-close"></i>&nbsp;Đóng',
+                action: function () {
+
+                }
+            }
+        },
+        onOpen: function () {
+        },
+        onClose: function () {
+        }
+    });
+}

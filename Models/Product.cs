@@ -19,6 +19,7 @@ namespace ShopAdmin.Models
         public int? CollectionId { get; set; }
 
         public int? Sales { get; set; }
+        public string PancakeId { get; set; }
         public Category Category { get; set; }
         public Collection Collection { get; set; }
 

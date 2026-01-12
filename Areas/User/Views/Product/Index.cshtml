@@ -4,6 +4,7 @@
 @model ProductDto
 @{
     var isSaleOff = Model.PriceDiscount.HasValue && Model.PriceDiscount > 0;
+    var disabled = Model.CountInStock > 0 ? "" : "disabled";
 }
 <div class="productDetail-page tp_product_detail" data-id="@(Model.Id)">
     <div class="breadcrumb-shop clearfix">
@@ -66,7 +67,7 @@
                                             @foreach (var value in item.ProductAttrs)
                                             {
                                                 <div data-value="" class=" n-sd swatch-element">
-                                                    <label data-value="@(value.Id)" class="select-attr-value" data-original-title="" title="">
+                                                    <label data-value="@(value.Id)" class="select-attr-value @disabled" data-original-title="" title="">
                                                         <span>@(value.Value)</span>
                                                     </label>
                                                 </div>
@@ -85,9 +86,10 @@
                                 </div>
 
                                 <div class="wrap-addcart clearfix">
-                                    <button type="button" id="add-to-cart" class="btnAddToCart tp_button">
+                                    <button type="button" id="add-to-cart" class="btnAddToCart tp_button" @disabled>
                                         Thêm vào giỏ hàng
-                                    </button><button type="button" id="addQuickCart" class="btnAddToCart">
+                                    </button>
+                                    <button type="button" id="addQuickCart" class="btnAddToCart" @disabled>
                                         Mua ngay
                                     </button>
                                 </div>

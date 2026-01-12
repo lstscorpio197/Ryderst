@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ShopAdmin.Authorize;
 using ShopAdmin.Common;
 using ShopAdmin.Dto;
+using ShopAdmin.Dto.PosAPI;
 using ShopAdmin.Dto.Products;
 using ShopAdmin.Helper;
 using ShopAdmin.Models;
 using ShopAdmin.WHttpMessage;
+using System.Net.Http.Headers;
 
 namespace ShopAdmin.Areas.Admin.Controllers
 {
@@ -15,6 +18,18 @@ namespace ShopAdmin.Areas.Admin.Controllers
     [AuthorizeAccessRole]
     public class ProductController : BaseController
     {
+        private readonly PancakeApiSetting _pancakeApiSetting;
+        private readonly HttpClient _httpClient;
+        public ProductController(IOptions<PancakeApiSetting> option, HttpClient httpClient)
+        {
+            _pancakeApiSetting = option.Value;
+            _httpClient = httpClient;
+
+            _httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json")
+            );
+        }
         public IActionResult Index()
         {
             return View();
@@ -139,7 +154,7 @@ namespace ShopAdmin.Areas.Admin.Controllers
                         ProductId = entity.Id,
                         Price = entity.PriceDiscount.HasValue && entity.PriceDiscount > 0 ? entity.PriceDiscount.Value : entity.Price,
                         Quantity = entity.Quantity,
-                        Sku = $"{entity.SKU}-{string.Join('-', x)}",
+                        Sku = $"{entity.SKU} {string.Join('-', x)}",
                         Stock = entity.Stock,
                         VariantValues = db.ProductAttributeValues.Include(y => y.ProductAttribute).Where(y => x.Contains(y.Value) && y.ProductAttribute.ProductId == entity.Id).Select(y => new ProductVariantValue
                         {
@@ -332,6 +347,192 @@ namespace ShopAdmin.Areas.Admin.Controllers
             }
         }
 
+        public async Task<JsonResult> SyncQuantity()
+        {
+            HttpMessage httpMessage = new HttpMessage(true);
+
+            try
+            {
+                var url = $"{_pancakeApiSetting.BaseUrl}/shops/{_pancakeApiSetting.ShopId}/products/variations?api_key={_pancakeApiSetting.ApiKey}&page_size=1000";
+                var response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var piResponse = await response.Content.ReadAsStringAsync();
+                var pancakeResponse = JsonConvert.DeserializeObject<PancakeApiResponse<List<PancakeProductVariantResponse>>>(piResponse);
+                var dictVariant = pancakeResponse.Data.ToDictionary(x => x.Display_id, x => x.Remain_quantity);
+                var lstSKU = dictVariant.Keys.ToList();
+                var localVariants = await db.ProductVariants.Where(x => lstSKU.Contains(x.Sku)).ToListAsync().ConfigureAwait(false);
+                var lstSyncedSku = new List<string>();
+                localVariants.ForEach(x =>
+                {
+                    var item = pancakeResponse.Data.FirstOrDefault(y => y.Display_id == x.Sku);
+                    if (item != null)
+                    {
+                        x.Quantity = dictVariant[x.Sku];
+                        x.Stock = dictVariant[x.Sku];
+                        //x.Price = item.Retail_price_after_discount > 0 && item.Retail_price_after_discount != item.Retail_price ? item.Retail_price_after_discount : item.Retail_price;
+                        //x.Product.Price = x.Price;
+                        //x.Product.PriceDiscount = item.Retail_price_after_discount > 0 && item.Retail_price_after_discount != item.Retail_price ? item.Retail_price_after_discount : x.Product.PriceDiscount;
+                        lstSKU.Remove(x.Sku);
+                        lstSyncedSku.Add(x.Sku);
+                    }
+                });
+                await db.SaveChangesAsync().ConfigureAwait(false);
+
+                httpMessage.Body.Data = new
+                {
+                    SyncedSkus = lstSyncedSku,
+                    FailedSkus = lstSKU
+                };
+                httpMessage.Body.Description = "Đồng bộ số lượng thành công";
+                return Json(httpMessage);
+            }
+            catch (Exception ex)
+            {
+                httpMessage.IsOk = false;
+                httpMessage.Body.MsgNoti = new HttpMessageNoti("500", null, ex.Message);
+                return Json(httpMessage);
+            }
+        }
+
+        public async Task<JsonResult> SyncProduct()
+        {
+            HttpMessage httpMessage = new HttpMessage(true);
+
+            using (var trans = await db.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var url = $"{_pancakeApiSetting.BaseUrl}/shops/{_pancakeApiSetting.ShopId}/products/variations?api_key={_pancakeApiSetting.ApiKey}&page_size=1000&page_number=1";
+                    var response = await _httpClient.GetAsync(url);
+                    //response.EnsureSuccessStatusCode();
+
+                    var piResponse = await response.Content.ReadAsStringAsync();
+                    var pancakeResponse = JsonConvert.DeserializeObject<PancakeApiResponse<List<PancakeProductVariantResponse>>>(piResponse);
+                    var lstSP = pancakeResponse.Data.GroupBy(x => x.Product.Display_id).Select(x => new PancakeProduct
+                    {
+                        Display_id = x.Key,
+                        Name = x.First().Product.Name,
+                        Note_product = x.First().Product.Note_product,
+                        Product_attributes = x.First().Product.Product_attributes,
+                        Product_id = x.First().Product_id,
+                        Categories = x.First().Product.Categories.Select(y => y.Name).ToList(),
+                        Product_variant = x.ToList(),
+                        Images = x.SelectMany(y => y.Images).Distinct().ToList()
+                    }).ToList();
+                    var lstSKU = lstSP.Select(x => x.Display_id).ToList();
+                    var lstSKUExist = await db.Products.Where(x => lstSKU.Contains(x.SKU)).Select(x => x.SKU).ToListAsync().ConfigureAwait(false);
+                    var lstSKUNotExist = await db.Products.Where(x => !lstSKU.Contains(x.SKU)).ToListAsync().ConfigureAwait(false);
+
+                    db.Products.RemoveRange(lstSKUNotExist);
+                    await db.SaveChangesAsync().ConfigureAwait(false);
+
+                    var categoryId = db.Categories.FirstOrDefault(x => x.Name == "Pancake")?.Id ?? 0;
+                    if (categoryId == 0)
+                    {
+                        var newCategory = new Category
+                        {
+                            Name = "Pancake",
+                            Visible = 0
+                        };
+                        await db.Categories.AddAsync(newCategory).ConfigureAwait(false);
+                        await db.SaveChangesAsync().ConfigureAwait(false);
+                        categoryId = newCategory.Id;
+                    }
+
+                    foreach (var sp in lstSP)
+                    {
+                        if (lstSKUExist.Contains(sp.Display_id))
+                            continue;
+
+                        var entity = new Product
+                        {
+                            PancakeId = sp.Product_id,
+                            SKU = sp.Display_id,
+                            Name = sp.Name,
+                            CategoryId = categoryId,
+                            Description = sp.Note_product,
+                            Quantity = sp.Product_variant.Sum(x => x.Remain_quantity),
+                            Stock = sp.Product_variant.Sum(x => x.Remain_quantity),
+                            Price = sp.Product_variant.Min(x => x.Retail_price),
+                            PriceDiscount = sp.Product_variant.Any(x => x.Retail_price_after_discount > 0 && x.Retail_price_after_discount != x.Retail_price) ? sp.Product_variant.Min(x => x.Retail_price_after_discount) : (int?)null,
+                            Images = new List<ProductImage>(),
+                            Attributes = new List<ProductAttribute>()
+                        };
+
+                        // Images
+                        foreach (var imgUrl in sp.Images)
+                        {
+                            entity.Images.Add(new ProductImage
+                            {
+                                ImageUrl = imgUrl,
+                                ImageName = Path.GetFileName(imgUrl)
+                            });
+                        }
+
+                        // Attributes
+                        foreach (var attr in sp.Product_attributes)
+                        {
+                            var productAttr = new ProductAttribute
+                            {
+                                Name = attr.Name,
+                                Values = attr.Values.Select(y => new ProductAttributeValue
+                                {
+                                    Value = y
+                                }).ToList()
+                            };
+                            entity.Attributes.Add(productAttr);
+                        }
+
+                        await db.Products.AddAsync(entity).ConfigureAwait(false);
+                        await db.SaveChangesAsync().ConfigureAwait(false);
+
+                        List<List<string>> lists = new List<List<string>>();
+                        foreach (var attr in sp.Product_attributes)
+                        {
+                            if (attr.Values.Count > 0)
+                                lists.Add(attr.Values);
+                        }
+                        var attributes = CartesianProduct(lists);
+                        List<ProductVariant> productVariants = new List<ProductVariant>();
+
+                        var productVariantsPancake = pancakeResponse.Data.Where(x => x.Product.Display_id == sp.Display_id).ToList();
+                        foreach (var attr in attributes)
+                        {
+                            var variant = FindProductBySKUAndAttributes(productVariantsPancake, sp.Display_id, attr.ToArray());
+
+                            ProductVariant pv = new ProductVariant();
+                            pv.ProductId = entity.Id;
+                            pv.Price = entity.PriceDiscount.HasValue && entity.PriceDiscount > 0 ? entity.PriceDiscount.Value : entity.Price;
+                            pv.Sku = variant?.Display_id ?? $"{entity.SKU} {string.Join('-', attr)}";
+                            pv.Quantity = variant?.Remain_quantity ?? 0;
+                            pv.Stock = variant?.Remain_quantity ?? 0;
+                            pv.PancakeId = variant?.Id;
+                            pv.VariantValues = db.ProductAttributeValues.Include(y => y.ProductAttribute).Where(y => attr.Contains(y.Value) && y.ProductAttribute.ProductId == entity.Id).Select(y => new ProductVariantValue
+                            {
+                                ProductAttributeValueId = y.Id
+                            }).ToList();
+
+                            productVariants.Add(pv);
+                        }
+                        await db.ProductVariants.AddRangeAsync(productVariants);
+
+                        await db.SaveChangesAsync().ConfigureAwait(false);
+                    }
+
+                    await trans.CommitAsync().ConfigureAwait(false);
+                    httpMessage.Body.Description = "Đồng bộ thành công";
+                    return Json(httpMessage);
+                }
+                catch (Exception ex)
+                {
+                    await trans.RollbackAsync().ConfigureAwait(false);
+                    httpMessage.IsOk = false;
+                    httpMessage.Body.MsgNoti = new HttpMessageNoti("500", null, ex.Message);
+                    return Json(httpMessage);
+                }
+            }
+        }
         private async Task<List<ProductImage>> SaveImage(ShopDbContext db, List<IFormFile> images, string sku)
         {
             // Thư mục lưu ảnh
@@ -379,6 +580,42 @@ namespace ShopAdmin.Areas.Admin.Controllers
                      from item in list
                      select new List<string>(accseq) { item }).ToList()
             );
+        }
+
+        public PancakeProductVariantResponse FindProductBySKUAndAttributes(List<PancakeProductVariantResponse> productVariants, string sku, string[] attrValues)
+        {
+            var searchSet = new HashSet<string>(attrValues, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var product in productVariants)
+            {
+                string skuVariant = product.Display_id;
+                string[] attrs = null;
+
+                // Trường hợp 1: "{SKU} {attrs}" - phân tách bằng khoảng trắng
+                var parts = skuVariant.Split(' ', 2);
+                if (parts.Length == 2 && parts[0] == sku)
+                {
+                    attrs = parts[1].Split('-');
+                }
+                // Trường hợp 2: "{SKU}-{attrs}" - phân tách bằng dấu gạch ngang
+                else if (skuVariant.StartsWith(sku + "-"))
+                {
+                    // Lấy phần sau SKU và dấu gạch ngang đầu tiên
+                    var attrPart = skuVariant.Substring(sku.Length + 1);
+                    attrs = attrPart.Split('-');
+                }
+                else
+                {
+                    continue;
+                }
+
+                // So sánh hai tập hợp
+                var productSet = new HashSet<string>(attrs, StringComparer.OrdinalIgnoreCase);
+                if (productSet.SetEquals(searchSet))
+                    return product;
+            }
+
+            return null;
         }
     }
 }
