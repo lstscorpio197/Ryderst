@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ShopAdmin.Authorize;
 using ShopAdmin.Common;
 using ShopAdmin.Dto;
+using ShopAdmin.Dto.PosAPI;
 using ShopAdmin.Dto.Products;
 using ShopAdmin.Helper;
 using ShopAdmin.Models;
@@ -15,6 +17,13 @@ namespace ShopAdmin.Areas.Admin.Controllers
     [AuthorizeAccessRole]
     public class ProductController : BaseController
     {
+        private readonly PancakeApiSetting _pancakeApiSetting;
+        private readonly HttpClient _httpClient;
+        public ProductController(IOptions<PancakeApiSetting> option, HttpClient httpClient)
+        {
+            _pancakeApiSetting = option.Value;
+            _httpClient = httpClient;
+        }
         public IActionResult Index()
         {
             return View();
@@ -139,7 +148,7 @@ namespace ShopAdmin.Areas.Admin.Controllers
                         ProductId = entity.Id,
                         Price = entity.PriceDiscount.HasValue && entity.PriceDiscount > 0 ? entity.PriceDiscount.Value : entity.Price,
                         Quantity = entity.Quantity,
-                        Sku = $"{entity.SKU}-{string.Join('-', x)}",
+                        Sku = $"{entity.SKU} {string.Join('-', x)}",
                         Stock = entity.Stock,
                         VariantValues = db.ProductAttributeValues.Include(y => y.ProductAttribute).Where(y => x.Contains(y.Value) && y.ProductAttribute.ProductId == entity.Id).Select(y => new ProductVariantValue
                         {
@@ -322,6 +331,40 @@ namespace ShopAdmin.Areas.Admin.Controllers
                 }).ToList();
 
                 httpMessage.Body.Data = productVariants;
+                return Json(httpMessage);
+            }
+            catch (Exception ex)
+            {
+                httpMessage.IsOk = false;
+                httpMessage.Body.MsgNoti = new HttpMessageNoti("500", null, ex.Message);
+                return Json(httpMessage);
+            }
+        }
+
+        public async Task<JsonResult> SyncQuantity()
+        {
+            HttpMessage httpMessage = new HttpMessage(true);
+
+            try
+            {
+                var url = $"{_pancakeApiSetting.BaseUrl}/shops/{_pancakeApiSetting.ShopId}/products/variations?api_key={_pancakeApiSetting.ApiKey}&page_size=1000";
+                var response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var piResponse = await response.Content.ReadAsStringAsync();
+                var pancakeResponse = JsonConvert.DeserializeObject<PancakeApiResponse<List<PancakeProductVariantResponse>>>(piResponse);
+                var dictVariant = pancakeResponse.Data.ToDictionary(x => x.Display_id, x => x.Remain_quantity);
+                foreach (var variant in pancakeResponse.Data)
+                {
+                    var localVariant = await db.ProductVariants.FirstOrDefaultAsync(x => x.Sku == variant.Display_id).ConfigureAwait(false);
+                    if (localVariant != null)
+                    {
+                        localVariant.Quantity = variant.Remain_quantity;
+                        localVariant.Stock = variant.Remain_quantity;
+                        db.Entry(localVariant).State = EntityState.Modified;
+                    }
+                }
+                httpMessage.Body.Description = "Đồng bộ số lượng thành công";
                 return Json(httpMessage);
             }
             catch (Exception ex)

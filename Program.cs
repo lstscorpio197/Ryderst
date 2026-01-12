@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using ShopAdmin.Common;
+using ShopAdmin.Dto.PosAPI;
 using ShopAdmin.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,12 @@ builder.Services.AddControllersWithViews();
 //Cấu hình DbContext với chuỗi kết nối
 builder.Services.AddDbContext<ShopDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Setting email
+builder.Services.Configure<PancakeApiSetting>(builder.Configuration.GetSection("Pancake"));
+
+// Đăng ký IHttpClientFactory
+builder.Services.AddHttpClient();
 
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>

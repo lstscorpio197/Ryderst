@@ -22,6 +22,7 @@ $(function () {
             $page.initGiaoDien();
             $page.BtnSearchClick();
             $page.GetList(1);
+            $page.Sync();
         },
         initValidate: function () {
             $form.validate({
@@ -187,7 +188,19 @@ $(function () {
 
             })
         },
-
+        Sync: () => {
+            $page.Self.find('#btn-sync-quantity').off('click').on('click', function () {
+                var getResponse = AjaxConfigHelper.SendRequestToServer(`/${$router}/SyncQuantity`, "POST", null);
+                getResponse.then((res) => {
+                    if (res.IsOk) {
+                        ToastSuccess("Đồng bộ thành công");
+                    }
+                    else {
+                        ToastError("Đồng bộ không thành công");
+                    }
+                })
+            })
+        }
     };
 
     var $ChiTiet = {

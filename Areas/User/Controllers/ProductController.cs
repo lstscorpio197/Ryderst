@@ -49,9 +49,9 @@ namespace ShopAdmin.Areas.User.Controllers
                     Description = product.Description,
                     CategoryId = product.CategoryId,
                     CategoryName = product.Category.Name,
-                    ImageUrl = product.Images.Select(x => x.ImageUrl).ToList()
+                    ImageUrl = product.Images.Select(x => x.ImageUrl).ToList(),
                 };
-
+                result.CountInStock = await db.ProductVariants.AsNoTracking().Where(x => x.ProductId == product.Id).SumAsync(x => x.Quantity).ConfigureAwait(false);
                 result.Attributes = await db.ProductAttributes.AsNoTracking().Where(x => x.ProductId == product.Id).Select(x => new AttributeDto
                 {
                     Id = x.Id,
