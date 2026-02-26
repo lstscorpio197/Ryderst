@@ -113,8 +113,8 @@ $(function () {
                     if (res.IsOk) {
                         let data = res.Body.Data.ProductItem || {};
                         for (let prop in data) {
-                            if (prop == 'Enable') {
-                                $modal.find(`[name=${prop}]`).prop('checked', data[prop] == 1);
+                            if (prop == 'IsHot' || prop == 'IsNew' || prop == 'IsBestSeller' || prop == 'Visible') {
+                                $modal.find(`[name=${prop}]`).prop('checked', data[prop] == true);
                                 continue;
                             }
                             if (prop.indexOf('Time') > -1 || prop.indexOf('Ngay') > -1) {

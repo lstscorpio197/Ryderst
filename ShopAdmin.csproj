@@ -20,20 +20,26 @@
   <ItemGroup>
     <Content Remove="wwwroot\js\Admin\Product.js" />
     <Content Remove="wwwroot\js\Shop\checkout.js" />
+    <Content Remove="wwwroot\js\Shop\customer.js" />
     <Content Remove="wwwroot\js\Shop\product.js" />
+    <Content Remove="wwwroot\js\Shop\signup.js" />
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\User\Views\Customer\Signup.cshtml" />
     <_ContentIncludedByDefault Remove="wwwroot\css\Shop\custom-mobile.css" />
     <_ContentIncludedByDefault Remove="wwwroot\js\Admin\Product.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\Shop\checkout.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\Shop\product.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\Shop\signup.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\js\Admin\Product.js" />
     <None Include="wwwroot\js\Shop\checkout.js" />
+    <None Include="wwwroot\js\Shop\customer.js" />
     <None Include="wwwroot\js\Shop\product.js" />
+    <None Include="wwwroot\js\Shop\signup.js" />
     <None Include="wwwroot\js\System\QuanLyTaiKhoan.js" />
     <None Include="wwwroot\js\System\SPermission.js" />
     <None Include="wwwroot\js\System\SRole.js" />
@@ -112,6 +118,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\User\Views\Customer\Signup.cshtml" />
   </ItemGroup>
 
 </Project>

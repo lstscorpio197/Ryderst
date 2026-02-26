@@ -1,0 +1,499 @@
+﻿/* ===== Hero collage slider ===== */
+.hero {
+    padding: 12px 0 10px;
+}
+
+.hero-frame {
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.hero-slide {
+    padding: 10px;
+    background: #fff;
+}
+
+/* Collage grid giống screenshot: nhiều ô, có mảng bo tròn */
+.collage {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr;
+    grid-template-rows: 260px 260px;
+    gap: 10px;
+}
+
+.tile {
+    position: relative;
+    overflow: hidden;
+    background: #eee;
+}
+
+    .tile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transform: scale(1.02);
+    }
+
+    .tile .overlay-text {
+        position: absolute;
+        left: 24px;
+        top: 26px;
+        color: #111;
+        max-width: 60%;
+    }
+
+.overlay-text h2 {
+    margin: 0;
+    font-weight: 950;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    line-height: 1.05;
+    font-size: clamp(1.4rem, 2.2vw, 2.25rem);
+}
+
+.overlay-text p {
+    margin: .4rem 0 0;
+    color: #444;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-size: .9rem;
+}
+
+/* tạo mảng cong kiểu Rhodi */
+.mask-arc-left {
+    border-top-right-radius: 260px;
+    border-bottom-right-radius: 260px;
+}
+
+.mask-arc-right {
+    border-top-left-radius: 260px;
+    border-bottom-left-radius: 260px;
+}
+
+.mask-circle {
+    border-radius: 999px;
+}
+
+.tile.bg-paper {
+    background: #e7e4df;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+}
+
+.paper-box {
+    text-align: center;
+    max-width: 420px;
+}
+
+    .paper-box .small {
+        font-weight: 800;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: #333;
+        font-size: .85rem;
+    }
+
+    .paper-box h3 {
+        margin: .55rem 0 0;
+        font-weight: 950;
+        letter-spacing: .03em;
+        text-transform: uppercase;
+        font-size: 1.05rem;
+        line-height: 1.35;
+        color: #111;
+    }
+
+@media (max-width: 991.98px) {
+    .collage {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+        .collage .tile {
+            height: 260px;
+        }
+
+    .tile .overlay-text {
+        max-width: 80%;
+    }
+}
+
+/* ===== Section headings kiểu Rhodi ===== */
+.sec {
+    padding: 28px 0;
+}
+
+.sec-head {
+    text-align: center;
+    padding: 30px 0;
+}
+
+    .sec-head h2 {
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        font-size: 2rem;
+    }
+
+    .sec-head .orn {
+        width: 110px;
+        height: 10px;
+        margin: 8px auto 6px;
+        position: relative;
+    }
+
+        .sec-head .orn:before, .sec-head .orn:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 48px;
+            height: 1px;
+            background: #cfcfcf;
+        }
+
+        .sec-head .orn:before {
+            left: 0;
+        }
+
+        .sec-head .orn:after {
+            right: 0;
+        }
+
+        .sec-head .orn i {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            color: #bdbdbd;
+            font-size: 12px;
+        }
+
+    .sec-head a {
+        display: inline-block;
+        margin-top: 2px;
+        color: #000;
+        font-size: 1.4rem;
+    }
+
+        .sec-head a:hover {
+            opacity: .75;
+        }
+
+/* ===== Product card Rhodi-like ===== */
+.p-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid transparent;
+    transition: .18s ease;
+    height: 100%;
+}
+
+    .p-card:hover {
+        transform: translateY(-2px);
+    }
+
+.p-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+    background: #eee;
+    max-height: 700px;
+}
+
+.button-add {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 35px;
+    line-height: 40px;
+    text-align: center;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    background: rgba(0, 0, 0, 0.5);
+    -webkit-transition: all 0.25s ease-in-out;
+    -o-transition: all 0.25s ease-in-out;
+    transition: all 0.25s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .button-add:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        margin: auto;
+        width: 1px;
+        height: 40%;
+        background: #fff;
+    }
+
+.p-name {
+    margin-top: 10px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+    text-align: center;
+    color: #000;
+}
+
+.p-price {
+    text-align: center;
+    color: #000;
+    margin-top: 2px;
+    font-size: 1.4rem;
+}
+
+.p-old {
+    text-decoration: line-through;
+    color: #8b8b8b;
+    margin-right: 6px;
+    font-size: 1.4rem;
+}
+
+.badge-stock {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255,255,255,.92);
+    border: 1px solid var(--line);
+    padding: .32rem .55rem;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #111;
+}
+
+.badge-sale {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #FDD464;
+    border-radius: 10px;
+    padding: .35rem .55rem;
+    font-size: 1.2rem;
+    letter-spacing: .04em;
+    text-transform: lowercase;
+    color: #111;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+    .badge-sale .sale-percent {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+/* ===== Hot section: left big image + right carousel ===== */
+.hot-wrap {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 24px;
+    align-items: center;
+}
+
+.hot-left {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    min-height: 420px;
+    border: 1px solid var(--line);
+    background: #eee;
+}
+
+    .hot-left img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .hot-left .hot-title {
+        position: absolute;
+        left: 36px;
+        bottom: 36px;
+        color: #fff;
+        font-weight: 950;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        text-shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+
+.hot-right {
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 16px;
+    background: #fff;
+}
+
+.hot-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    color: #111;
+    font-weight: 850;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-size: .82rem;
+}
+
+    .hot-nav .arrow {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: .45rem .7rem;
+        background: #fff;
+    }
+
+        .hot-nav .arrow:hover {
+            background: var(--soft);
+        }
+
+@media (max-width: 991.98px) {
+    .hot-wrap {
+        grid-template-columns: 1fr;
+    }
+
+    .hot-left {
+        min-height: 320px;
+    }
+}
+
+/* ===== New Products Slider ===== */
+.new-products-wrapper {
+    position: relative;
+}
+
+.np-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid #eaeaea;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transition: 0.2s;
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+
+    .np-nav:hover {
+        background: #111;
+        color: #fff;
+    }
+
+.np-prev {
+    left: -24px; /* nằm ngoài khung */
+}
+
+.np-next {
+    right: -24px; /* nằm ngoài khung */
+}
+
+/* Mobile: đưa nút vào trong 1 chút */
+@media(max-width: 768px) {
+    .np-prev {
+        left: 5px;
+    }
+
+    .np-next {
+        right: 5px;
+    }
+}
+
+.new-slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ns-btn {
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+}
+
+    .ns-btn:hover {
+        background: var(--soft);
+    }
+
+.ns-viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.ns-track {
+    display: flex;
+    gap: 22px; /* khoảng cách giữa card giống Rhodi */
+    will-change: transform;
+    transition: transform .28s ease;
+}
+
+/* Desktop: 4 sản phẩm */
+.ns-item {
+    flex: 0 0 calc((100% - 22px*3) / 4);
+}
+
+/* Tablet: 3 sản phẩm */
+@media (max-width: 991.98px) {
+    .ns-item {
+        flex-basis: calc((100% - 22px*2) / 3);
+    }
+}
+
+/* Small tablet: 2 sản phẩm */
+@media (max-width: 767.98px) {
+    .ns-item {
+        flex-basis: calc((100% - 22px*1) / 2);
+    }
+}
+
+/* Mobile: 1 sản phẩm */
+@media (max-width: 575.98px) {
+    .ns-item {
+        flex-basis: 100%;
+    }
+}
+
+/* Để card trông giống grid Rhodi */
+.new-slider .p-card:hover {
+    transform: translateY(-2px);
+}
+
+#hotProducts .owl-nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+#hotProducts .owl-prev::after {
+    content: " Trước"
+}
+
+#hotProducts .owl-next::before {
+    content: "Sau "
+}

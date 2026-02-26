@@ -12,6 +12,7 @@ namespace ShopAdmin.Areas.User.Controllers
         {
             ViewBag.ListSPNew = await GetListSPNew();
             ViewBag.ListSPBanChay = await GetListSPBanChay();
+            ViewBag.ListSPHot = await GetListSPHot();
             return View();
         }
 
@@ -19,14 +20,15 @@ namespace ShopAdmin.Areas.User.Controllers
         {
             using (var db = new ShopDbContext())
             {
-                var products = await db.Products.Include(x => x.Images).AsNoTracking().Select(x => new ProductDto
+                var products = await db.Products.Include(x => x.Images).Include(x => x.Variants).AsNoTracking().Where(x => x.Visible != false && x.IsNew == true).Select(x => new ProductDto
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Price = x.Price,
                     PriceDiscount = x.PriceDiscount,
-                    ImageUrl = new List<string> { x.Images.Select(x => x.ImageUrl).FirstOrDefault() }
-                }).OrderByDescending(p => p.Id).Skip(0).Take(12).ToListAsync().ConfigureAwait(false);
+                    ImageUrl = x.Images.Select(x => x.ImageUrl).ToList(),
+                    CountInStock = x.Variants.Sum(v => v.Quantity)
+                }).OrderByDescending(p => p.Id).Skip(0).Take(10).ToListAsync().ConfigureAwait(false);
                 return products;
             }
         }
@@ -35,13 +37,30 @@ namespace ShopAdmin.Areas.User.Controllers
         {
             using (var db = new ShopDbContext())
             {
-                var products = await db.Products.Include(x => x.Images).AsNoTracking().OrderByDescending(p => p.Sales).Skip(0).Take(12).Select(x => new ProductDto
+                var products = await db.Products.Include(x => x.Images).Include(x => x.Variants).AsNoTracking().Where(x => x.Visible != false && x.IsBestSeller == true).OrderByDescending(x => x.Id).Skip(0).Take(4).Select(x => new ProductDto
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Price = x.Price,
                     PriceDiscount = x.PriceDiscount,
-                    ImageUrl = new List<string> { x.Images.Select(x => x.ImageUrl).FirstOrDefault() }
+                    ImageUrl = x.Images.Select(x => x.ImageUrl).ToList(),
+                    CountInStock = x.Variants.Sum(v => v.Quantity)
+                }).ToListAsync().ConfigureAwait(false);
+                return products;
+            }
+        }
+        private async Task<List<ProductDto>> GetListSPHot()
+        {
+            using (var db = new ShopDbContext())
+            {
+                var products = await db.Products.Include(x => x.Images).Include(x => x.Variants).AsNoTracking().Where(x => x.Visible != false && x.IsHot == true).Select(x => new ProductDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Price = x.Price,
+                    PriceDiscount = x.PriceDiscount,
+                    ImageUrl = x.Images.Select(x => x.ImageUrl).ToList(),
+                    CountInStock = x.Variants.Sum(v => v.Quantity)
                 }).ToListAsync().ConfigureAwait(false);
                 return products;
             }

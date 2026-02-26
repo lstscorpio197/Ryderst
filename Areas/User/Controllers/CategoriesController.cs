@@ -24,7 +24,7 @@ namespace ShopAdmin.Areas.User.Controllers
                     Id = id,
                     Name = cate.Name
                 };
-                var productsQuery = db.Products.Include(x => x.Images).AsNoTracking().Where(x => x.CategoryId == id).Select(x => new ProductDto
+                var productsQuery = db.Products.Include(x => x.Images).AsNoTracking().Where(x => x.CategoryId == id && x.Visible != false).Select(x => new ProductDto
                 {
                     Id = x.Id,
                     Name = x.Name,

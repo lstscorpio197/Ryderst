@@ -1,144 +1,147 @@
 ﻿@using ShopAdmin.Common
 @using ShopAdmin.Dto.Products
+@using ShopAdmin.Helper
 
-@model ProductDto
+@model List<ProductDto>
 @{
-    var isSaleOff = Model.PriceDiscount.HasValue && Model.PriceDiscount > 0;
-    var disabled = Model.CountInStock > 0 ? "" : "disabled";
+    decimal maxprice = ViewBag.Maxprice ?? 2000000;
+    string search = ViewBag.Search ?? "";
+    string sort = ViewBag.Sort ?? "default";
+    var items = Model ?? new List<ProductDto>();
 }
-<div class="productDetail-page tp_product_detail" data-id="@(Model.Id)">
-    <div class="breadcrumb-shop clearfix">
-        <div class="container">
-            <div class=" ">
-                <ol class="breadcrumb breadcrumb-arrows clearfix">
-                    <li><a rel="nofollow" href="/" target="_self"><i class="fa fa-home"></i> Trang chủ</a></li>
-                    <li><a rel="nofollow" href="/@(Model.CategoryName)-pc@(Model.CategoryId)" data-id="@Model.CategoryId">@Model.CategoryName</a></li>
-                    <li class="active"><span>@Model.Name</span></li>
-                </ol>
+<link rel="stylesheet" href="~/css/Shop/home.css" />
+<style>
+    .page-head{
+      padding: 28px 0 18px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 22px;
+    }
+
+    .page-title{
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .toolbar{
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .search-box{
+      position: relative;
+    }
+
+    .search-box i{
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
+
+    .search-box input{
+      padding-left: 40px;
+      height: 46px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .form-select, .form-range, .form-control{
+      box-shadow: none !important;
+    }
+
+    .form-select{
+      height: 46px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .price-box{
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 14px;
+      background: var(--soft);
+      height: 46px;
+      display:flex;
+      align-items:center;
+      font-weight: 700;
+    }
+
+</style>
+<div class="container">
+    @* <div class="page-head">
+        <h1 class="page-title">Sản phẩm</h1>
+    </div>
+ *@
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="row g-3 align-items-end">
+            <div class="col-12 col-lg-5">
+                <label class="form-label fw-bold">Tìm kiếm</label>
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input id="searchInput" type="text" class="form-control" placeholder="Nhập tên sản phẩm..." value="@search">
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4">
+                <label class="form-label fw-bold">Khoảng giá tối đa</label>
+                <input id="priceRange" type="range" class="form-range" min="10000" max="2000000" step="10000" value="@maxprice">
+                <div class="price-box" id="priceValue">Tối đa: @maxprice.ToStringNumber() ₫</div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3">
+                <label class="form-label fw-bold">Sắp xếp</label>
+                <select id="sortSelect" class="form-select">
+                    <!option value="default" @(sort == "default" ? "selected" : "")>Mặc định</!option>
+                    <!option value="price-asc" @(sort == "price-asc" ? "selected" : "")>Giá tăng dần</!option>
+                    <!option value="price-desc" @(sort == "price-desc" ? "selected" : "")>Giá giảm dần</!option>
+                    <!option value="name-asc" @(sort == "name-asc" ? "selected" : "")>Tên A → Z</!option>
+                    <!option value="name-desc" @(sort == "name-desc" ? "selected" : "")>Tên Z → A</!option>
+                </select>
             </div>
         </div>
     </div>
-    <div class="product-content">
-        <div class="container">
-            <div class="row product-detail-wrapper">
-                <div class="clearfix product-detail-main">
-                    <div class="col-md-6">
-                        <div class="album-container">
-                            <ul id="lightSlider">
-                                @foreach (var img in Model.ImageUrl)
-                                {
-                                    <li data-thumb="@img">
-                                        <img src="@img" />
-                                    </li>
-                                }
-                            </ul>
-                        </div>
+
+
+    <div class="row g-4" id="productGrid">
+        @foreach (var item in items)
+        {
+            var isSaleOff = item.PriceDiscount.HasValue && item.PriceDiscount > 0;
+            <div class="col-6 col-lg-3">
+                <a href="@($"/{SlugHelper.GenerateSlug(item.Name)}-p{item.Id}")" class="p-card d-block">
+                    @if(item.CountInStock <= 0)
+                    {
+                        <span class="badge-stock">HẾT HÀNG</span>
+                    }
+                    @if (isSaleOff)
+                    {
+                        var salePercent = 100 - (int)((item.PriceDiscount.Value / item.Price) * 100);
+                        <span class="badge-sale"><span class="sale-percent">@(salePercent)</span>% off</span>
+                    }
+                    <div class="pos-relative">
+                        <img class="p-img" src="@item.ImageUrl.FirstOrDefault()" alt="@item.Name">
                     </div>
-                    <div class="col-md-6">
-
-                        <div class="product-title">
-                            <h1>@Model.Name</h1>
-                            <div class="pro-soldold">
-                                <span class="statusProduct">@(Model.CountInStock > 0 ? "Còn hàng" : "Tạm hết hàng")</span>
-                            </div>
-                        </div>
-
-                        <div class="product-price">
-                            @if (isSaleOff)
-                            {
-                                <span class="original-price">@Model.Price.ToStringNumber() ₫</span>
-                                <span class="pro-price tp_product_detail_price">@Model.PriceDiscount.ToStringNumber() ₫</span>
-                            }
-                            else
-                            {
-                                <span class="pro-price tp_product_detail_price">@Model.Price.ToStringNumber() ₫</span>
-                            }
-                        </div>
-
-                        <form id="add-item-form" class="variants clearfix">
-                            <div class="select-swatch clearfix ">
-                                @foreach (var item in Model.Attributes)
-                                {
-                                    <div class="swatch clearfix attribute" data-id="@item.Id" data-name="@item.Name">
-                                        <div class="variant-header">
-                                            @item.Name
-                                        </div>
-                                        <div class="select-swap req" data-column="i1">
-                                            @foreach (var value in item.ProductAttrs)
-                                            {
-                                                <div data-value="" class=" n-sd swatch-element">
-                                                    <label data-value="@(value.Id)" class="select-attr-value @disabled" data-original-title="" title="">
-                                                        <span>@(value.Value)</span>
-                                                    </label>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-
-                            <div class="selector-actions">
-                                <div class="quantity-area clearfix">
-                                    <input type="button" value="-" class="qty-btn tp_button btn-subtract">
-                                    <input type="text" id="quantity" name="quantity" value="1" min="1" class="quantity-selector" max="873">
-                                    <input type="button" value="+" class="qty-btn tp_button btn-add">
-
-                                </div>
-
-                                <div class="wrap-addcart clearfix">
-                                    <button type="button" id="add-to-cart" class="btnAddToCart tp_button" @disabled>
-                                        Thêm vào giỏ hàng
-                                    </button>
-                                    <button type="button" id="addQuickCart" class="btnAddToCart" @disabled>
-                                        Mua ngay
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-
-                        <div class="product-description">
-                            <div class="title-bl">
-                                <h2>
-                                    Mô tả sản phẩm
-                                    <span class="icon-open active"></span>
-                                </h2>
-                            </div>
-                            <div class="description-content" style="display: block;">
-                                <div class="description-productdetail">
-                                    <div class="description-productdetail">
-                                        @Html.Raw(Model.Description)
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <div class="p-name">@item.Name</div>
+                    @if (isSaleOff)
+                    {
+                        <div class="p-price"><span class="p-old">@item.Price.ToStringNumber() ₫</span>@item.PriceDiscount.ToStringNumber() ₫</div>
+                    }
+                    else
+                    {
+                        <div class="p-price">@item.Price.ToStringNumber() ₫</div>
+                    }
+                </a>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <h1 class="text-center">Sản phẩm tương tự</h1>
-                </div>
-
-                <div class="related-products" data-id="@Model.Id" data-cateid="@Model.CategoryId">
-                    <div class="swiper relatedSwiper">
-                        <div class="swiper-wrapper">
-                            
-                        </div>
-
-                        <!-- Navigation -->
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                </div>
-            </div>
-        </div>
+        }
     </div>
 </div>
-
 
 @section scripts {
     <script src="/js/Shop/product.js"></script>

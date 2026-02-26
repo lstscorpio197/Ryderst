@@ -2,12 +2,12 @@
 
 @{
     var db = new ShopDbContext();
-    var lstMenu = await db.Categories.AsNoTracking().ToListAsync().ConfigureAwait(false);
+    var lstMenu = await db.Categories.AsNoTracking().Where(x=>x.Visible != 0).ToListAsync().ConfigureAwait(false);
 
     var lstMenuParent = lstMenu.Where(x => x.ParentId == null);
 
 }
-<header class="header">
+@* <header class="header">
     <div class="container">
         <div class="header-content">
             <div class="left-bar">
@@ -91,7 +91,7 @@
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                </button> *@
+                </button>
                 <button class="action-btn cart-btn" id="cartBtn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -110,4 +110,86 @@
             </div>
         </div>
     </div>
+</header> *@
+
+<header id="header" class="header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand brand" href="/">
+                <img src="~/Images/logo-jpg.jpg" />
+            </a>
+
+            <button class="navbar-toggler btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav mx-lg-auto gap-lg-1">
+                    <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
+
+                    @foreach(var item in lstMenuParent)
+                    {
+                        var lstChild = lstMenu.Where(x => x.ParentId == item.Id);
+                        if (lstChild.Any())
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">@item.Name</a>
+                                <ul class="dropdown-menu">
+                                    @foreach (var child in lstChild)
+                                    {
+                                        var lstChild2 = lstMenu.Where(x => x.ParentId == child.Id);
+                                        if (lstChild2.Any())
+                                        {
+                                            <li class="dropdown-submenu">
+                                                <a class="dropdown-item submenu-toggle" href="#">
+                                                    @child.Name <span class="submenu-caret"><i class="bi bi-chevron-right"></i></span>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    @foreach (var child2 in lstChild2)
+                                                    {
+                                                        <li><a class="dropdown-item" href="/@($"{child2.Name}-pc{child2.Id}")">@child2.Name</a></li>
+                                                        <li><a href="/@($"{child2.Name}-pc{child2.Id}")">@child2.Name</a></li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+
+                                        else
+                                        {
+                                            <li><a class="dropdown-item" href="/@($"{child.Name}-pc{child.Id}")">@child.Name</a></li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" href="/@($"{item.Name}-pc{item.Id}" )">@item.Name</a></li>
+                        }
+                    }
+
+                    <li class="nav-item">
+                        <a href="/tin-tuc" class="nav-link">Tin tức</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/bo-suu-tap" class="nav-link">Bộ sưu tập</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/sale" class="nav-link">Sale</a>
+                    </li>
+
+                </ul>
+
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <button class="icon-btn" type="button" aria-label="Search"><i class="bi bi-search"></i></button>
+                    <a class="icon-btn" href="/Customer"><i class="bi bi-person"></i></a>
+                    <button class="icon-btn position-relative" type="button" id="cartBtn" aria-label="Cart">
+                        <i class="bi bi-bag"></i>
+                        <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-dark">0</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </nav>
 </header>

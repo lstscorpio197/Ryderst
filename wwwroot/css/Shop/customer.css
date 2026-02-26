@@ -1,0 +1,105 @@
+﻿.userList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+    .userList a {
+        color: #000;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+.userIndex {
+    background: #eee;
+    padding: 20px;
+    float: left;
+    width: 100%;
+    clear: both;
+    margin: 0 0 20px 0;
+}
+.if-name{
+    font-size: 20px;
+}
+.userList1 span {
+    display: block;
+}
+/*Signin/Signup*/
+.error {
+    color: red;
+    font-weight: 500;
+}
+
+.signin-container {
+    display: flex;
+    margin: 0;
+}
+
+.signin-left-container {
+    padding: 0;
+    border-right: 1px solid #ddd;
+    align-content: center;
+}
+
+.signin-right-container {
+    padding: 40px;
+    align-content: center;
+    align-items: center;
+}
+
+.signin-title {
+    text-align: center;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+    .signin-title span {
+        padding: 5px;
+        border-bottom: 2px solid;
+        border-radius: 5px;
+    }
+
+.input-group .input-group-append {
+    height: 40px;
+    position: absolute;
+    width: 40px;
+    z-index: 999;
+}
+
+.input-group-text {
+    font-size: 1.5rem;
+    height: 40px;
+    justify-content: center;
+}
+
+.input-group input {
+    height: 40px;
+    padding-left: 50px;
+    border: 1px solid #cdcdcd;
+    border-left: 0;
+}
+
+    .input-group input:focus {
+        border: 1px solid #73b3fc;
+        border-left: 0;
+    }
+
+.btn-signin {
+    background: #000000;
+    color: #fff;
+    font-size: 16px;
+    height: 40px;
+    min-width: 150px;
+    font-weight: 600;
+}
+
+    .btn-signin:hover {
+        background: #535151;
+        color: #fff;
+        font-size: 16px;
+        height: 40px;
+        min-width: 150px;
+        font-weight: 600;
+    }

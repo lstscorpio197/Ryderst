@@ -90,7 +90,16 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}",
     defaults: new { area = "User" } // chỉ định area mặc định là Shop
 );
-
+app.MapControllerRoute(
+    name: "signin",
+    pattern: "/signin",
+    defaults: new { area = "User", controller = "Customer", action = "Signin" }
+);
+app.MapControllerRoute(
+    name: "signup",
+    pattern: "/signup",
+    defaults: new { area = "User", controller = "Customer", action = "Signup" }
+);
 app.MapControllerRoute(
     name: "admin-login",
     pattern: "admin/dang-nhap",
@@ -110,7 +119,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "view-category",
     pattern: "{name}-p{id}",
-    defaults: new { controller = "Product", action = "Index", area = "User" }
+    defaults: new { controller = "Product", action = "Detail", area = "User" }
 );
 app.MapControllerRoute(
     name: "tin-tuc",

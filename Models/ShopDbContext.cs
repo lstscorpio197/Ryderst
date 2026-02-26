@@ -35,6 +35,7 @@ public partial class ShopDbContext : DbContext
     public virtual DbSet<ProductAttribute> ProductAttributes { get; set; }
     public virtual DbSet<SCoupon> SCoupons { get; set; }
     public virtual DbSet<SNew> SNews { get; set; }
+    public virtual DbSet<Customer> Customers { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

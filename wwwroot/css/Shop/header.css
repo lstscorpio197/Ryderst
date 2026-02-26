@@ -1,0 +1,131 @@
+﻿/* ===== Header ===== */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 0 50px;
+}
+
+    .header.shadow {
+        box-shadow: 0 12px 30px rgba(0,0,0,.06);
+    }
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-weight: 900;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.brand-badge {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    background: #fff;
+}
+.navbar-brand img{
+    max-height: 50px;
+}
+
+.nav-item.dropdown:hover > .dropdown-menu {
+    display: block;
+    top: 100%;
+    left: 0;
+    margin-top: .125rem;
+}
+
+.nav-link {
+    font-weight:700;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    color: #111 !important;
+}
+
+    .nav-link:hover {
+        opacity: .75;
+    }
+
+.icon-btn {
+    border: 1px solid #000;
+    background: #fff;
+    border-radius: 50px;
+    padding: .55rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+}
+
+    .icon-btn:hover {
+        background: var(--soft);
+    }
+
+.lang {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: .45rem .6rem;
+    font-weight: 800;
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+}
+
+/* ===== Dropdown 3 cấp ===== */
+.dropdown-menu {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: .55rem;
+    min-width: 260px;
+}
+
+.dropdown-item {
+    border-radius: 12px;
+    padding: .55rem .7rem;
+    font-weight: 750;
+}
+
+    .dropdown-item:hover {
+        background: var(--soft);
+    }
+
+.dropdown-submenu {
+    position: relative;
+}
+
+    .dropdown-submenu > .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-left: .25rem;
+    }
+
+.submenu-caret {
+    float: right;
+    opacity: .65;
+    margin-top: .2rem;
+}
+
+@media (max-width: 991.98px) {
+    .dropdown-submenu > .dropdown-menu {
+        position: static;
+        margin-left: 0;
+        margin-top: .25rem;
+        box-shadow: none;
+    }
+
+    .dropdown-menu {
+        box-shadow: none;
+    }
+}

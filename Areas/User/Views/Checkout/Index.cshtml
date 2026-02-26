@@ -1,9 +1,11 @@
 ﻿@using ShopAdmin.Common
 @using ShopAdmin.Dto.Carts;
+@using ShopAdmin.Helper
 
 @model List<CartItemDto>
 @{
     ViewBag.Title = "Checkout";
+    CustomerSession cus = Context.Session.GetObject<CustomerSession>(AppConst.CustomerSession) ?? new CustomerSession();
 }
 <link rel="stylesheet" href="~/css/Shop/checkout.css" />
 <section class="checkout-container container ">
@@ -12,15 +14,15 @@
         <form id="checkoutForm" method="post">
             <div class="form-group">
                 <label>Họ tên</label>
-                <input type="text" name="FullName" class="form-control" required />
+                <input type="text" name="FullName" class="form-control" value="@cus.Name" required />
             </div>
             <div class="form-group">
                 <label>Số điện thoại</label>
-                <input type="tel" name="Phone" class="form-control" required />
+                <input type="tel" name="Phone" class="form-control" value="@cus.Phone" required />
             </div>
             <div class="form-group">
                 <label>Địa chỉ</label>
-                <input type="text" name="Address" class="form-control" required />
+                <input type="text" name="Address" class="form-control" value="@cus.Address" required />
             </div>
             <div class="form-group">
                 <label>Ghi chú</label>

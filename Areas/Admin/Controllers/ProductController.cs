@@ -200,6 +200,10 @@ namespace ShopAdmin.Areas.Admin.Controllers
                     item.Description = entity.Description;
                     item.Price = entity.Price;
                     item.PriceDiscount = entity.PriceDiscount;
+                    item.IsHot = entity.IsHot;
+                    item.IsNew = entity.IsNew;
+                    item.IsBestSeller = entity.IsBestSeller;
+                    item.Visible = entity.Visible;
 
                     db.Entry(item).State = EntityState.Modified;
                     await db.SaveChangesAsync().ConfigureAwait(false);
@@ -456,6 +460,7 @@ namespace ShopAdmin.Areas.Admin.Controllers
                             Stock = sp.Product_variant.Sum(x => x.Remain_quantity),
                             Price = sp.Product_variant.Min(x => x.Retail_price),
                             PriceDiscount = sp.Product_variant.Any(x => x.Retail_price_after_discount > 0 && x.Retail_price_after_discount != x.Retail_price) ? sp.Product_variant.Min(x => x.Retail_price_after_discount) : (int?)null,
+                            Visible = false,
                             Images = new List<ProductImage>(),
                             Attributes = new List<ProductAttribute>()
                         };

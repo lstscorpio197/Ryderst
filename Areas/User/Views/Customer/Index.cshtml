@@ -1,0 +1,105 @@
+﻿@using ShopAdmin.Common
+@using ShopAdmin.Helper
+@{
+    ViewBag.Title = "Trang cá nhân";
+    CustomerSession cus = Context.Session.GetObject<CustomerSession>(AppConst.CustomerSession) ?? new CustomerSession();
+}
+
+<link rel="stylesheet" href="~/css/Shop/customer.css" />
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-2 col-lg-2 col-xs-12 col-sm-12">
+            <div class="menuPv">
+                <div class="userList d-flex flex-column">
+                    <a href="/customer"><b>Thông tin tài khoản</b></a>
+                    @* <a href="/order">Lịch sử đơn hàng</a> *@
+                    <a href="/customer/signout">Đăng xuất</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10 col-lg-10 col-xs-12 col-sm-12">
+            <div class="d-flex flex-column">
+                <div class="ctrl-wrapper">
+                    <div id="profileContent">
+                        <h3>Tài khoản của tôi</h3>
+                        <div class="userIndex">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 userList1">
+                                <span class="if-name"><b>@cus.Name</b></span>
+                                <span>@cus.Email</span>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-12 col-sm-2 userList1">
+                                <span><b>Sinh nhật</b></span>
+                                <span>@cus.Birthday?.ToString("dd/mm/yyyy")</span>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-12 col-sm-2 userList1">
+                                <span><b>Điện thoại</b></span>
+                                <span>@cus.Phone</span>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 userList1">
+                                <span><b>Đã chi tiêu</b></span>
+                                <span>
+                                    0 VNĐ
+                                </span>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-12 col-sm-2 userList1">
+                                <span><b>Điểm tích lũy</b></span>
+                                <span>@(cus.RPoint ?? 0)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ctrl-wrapper">
+                    <div id="profileContent">
+                        <h3>Thông tin cá nhân</h3>
+                        <form id="infor-form">
+                            <div class="userIndex">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 userList1 mt-3">
+                                    <span class="">Tên</span>
+                                    <input type="text" class="form-control" name="name" value="@cus.Name" />
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 userList1 mt-3">
+                                    <span class="">Số điện thoại</span>
+                                    <input type="text" class="form-control" name="phone" value="@cus.Phone" />
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 userList1 mt-3">
+                                    <span class="">Email</span>
+                                    <input type="text" class="form-control" name="email" value="@cus.Email" />
+                                </div>
+
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 userList1 mt-3">
+                                    <span class="">Ngày sinh</span>
+                                    <input type="text" class="form-control" value="@cus.Birthday?.ToString("dd/mm/yyyy")" />
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 userList1 mt-3">
+                                    <span class="">Giới tính</span>
+                                    <select class="form-control" name="sex">
+                                        <option value="">--Giới tính--</option>
+                                        <!option value="Nam" @(cus.Sex == "Nam" ? "selected" : "")>Nam</!option>
+                                        <!option value="Nữ" @(cus.Sex == "Nam" ? "selected" : "")>Nữ</!option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 userList1 mt-3">
+                                    <span class="">Địa chỉ</span>
+                                    <input type="text" class="form-control" name="address" value="@cus.Address" />
+                                </div>
+
+                                <div class="d-block">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 userList1 mt-3">
+                                        <button class="btn btn-signin" type="button" id="btnUpdate">Cập nhật thông tin cá nhân</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="/js/Shop/customer.js"></script>
+}

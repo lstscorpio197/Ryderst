@@ -10,11 +10,17 @@ namespace ShopAdmin.Areas.User.Controllers
     [Area("User")]
     public class ProductController : Controller
     {
-        public async Task<IActionResult> Index(string name, int id)
+        public async Task<IActionResult> Index(string keyword = null, decimal? maxprice = null, string sort = null)
+        {
+            ViewBag.Search = keyword;
+            ViewBag.Maxprice = maxprice;
+            ViewBag.Sort = sort;
+            return View(await GetList(keyword, maxprice, sort));
+        }
+        public async Task<IActionResult> Detail(string name, int id)
         {
             return View(await GetItem(id));
         }
-
         public async Task<JsonResult> GetRelatedItems(int id, int cateId)
         {
             using (var db = new ShopDbContext())
@@ -60,6 +66,48 @@ namespace ShopAdmin.Areas.User.Controllers
                 }).ToListAsync().ConfigureAwait(false);
 
                 return result;
+            }
+        }
+
+        private async Task<List<ProductDto>> GetList(string search, decimal? maxprice, string sort)
+        {
+            using (var db = new ShopDbContext())
+            {
+                var query = db.Products.Include(x => x.Images).Include(x => x.Variants).AsNoTracking().Where(x => x.Visible != false);
+                if (search != null)
+                    query = query.Where(x => x.SKU.Contains(search) || x.Name.Contains(search));
+                if (maxprice != null)
+                    query = query.Where(x => (x.PriceDiscount.HasValue && x.PriceDiscount.Value < maxprice) || x.Price < maxprice);
+
+                var items = await query.Select(x => new ProductDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Price = x.Price,
+                    PriceDiscount = x.PriceDiscount,
+                    Description = x.Description,
+                    CategoryId = x.CategoryId,
+                    ImageUrl = x.Images.Select(x => x.ImageUrl).ToList(),
+                    CountInStock = x.Variants.Sum(v => v.Quantity)
+                }).ToListAsync().ConfigureAwait(false);
+
+                switch (sort)
+                {
+                    case "price-asc":
+                        items = items.OrderBy(x => x.PriceDiscount ?? x.Price).ToList();
+                        break;
+                    case "price-desc":
+                        items = items.OrderByDescending(x => x.PriceDiscount ?? x.Price).ToList();
+                        break;
+                    case "name-asc":
+                        items = items.OrderBy(x => x.Name).ToList();
+                        break;
+                    case "name-desc":
+                        items = items.OrderByDescending(x => x.Name).ToList();
+                        break;
+                }
+
+                return items;
             }
         }
     }

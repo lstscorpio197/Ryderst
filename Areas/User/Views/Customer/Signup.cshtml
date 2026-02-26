@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Đăng ký";
+}
+
+<link rel="stylesheet" href="~/css/Shop/customer.css" />
+<div class="row signin-container">
+    <div class="col-md-8 col-sm-0 signin-left-container">
+        <img src="/Images/banner.jpg" />
+    </div>
+    <div class="col-md-4 col-sm-12 signin-right-container">
+        <form id="signup-form">
+
+            <div class="signin-title">
+                <span class="">Đăng ký</span>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ViewBag.Message))
+            {
+                <div class="">
+                    <div class="">
+                        <label class="custom-control-label error">@ViewBag.Message</label>
+                    </div>
+                </div>
+            }
+
+            <div class="input-group mb-3">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-signature"></i></span>
+                </div>
+                <input type="text" name="name" class="form-control input_user" value="" placeholder="Tên" required>
+            </div>
+            <div class="input-group mb-2">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                </div>
+                <input type="password" name="password" class="form-control input_pass" value="" placeholder="Mật khẩu" required>
+            </div>
+            <div class="input-group mb-2">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                </div>
+                <input type="text" name="phone" class="form-control" value="" placeholder="Số điện thoại">
+            </div>
+            <div class="input-group mb-2">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                </div>
+                <input type="text" name="email" class="form-control" value="" placeholder="Email">
+            </div>
+            <div class="input-group mb-2">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-map-location-dot"></i></span>
+                </div>
+                <input type="text" name="address" class="form-control" value="" placeholder="Địa chỉ">
+            </div>
+            @* <div class="input-group mb-2">
+            <div class="input-group-append">
+            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+            </div>
+            <input type="date" name="birthday" class="form-control" value="" placeholder="Ngày sinh">
+            </div>
+            <div class="input-group mb-2">
+            <div class="input-group-append">
+            <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+            </div>
+            <input type="text" name="sex" class="form-control" value="" placeholder="Giới tính">
+            </div> *@
+
+            <div class="d-flex justify-content-center mt-3 login_container">
+                <button type="button" name="button" class="btn btn-signin" id="btnSignup">Đăng ký</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts {
+    <script src="/js/Shop/signup.js"></script>
+}

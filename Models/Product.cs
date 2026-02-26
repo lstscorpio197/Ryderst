@@ -20,6 +20,10 @@ namespace ShopAdmin.Models
 
         public int? Sales { get; set; }
         public string PancakeId { get; set; }
+        public bool? IsHot { get; set; }
+        public bool? IsNew { get; set; }
+        public bool? IsBestSeller { get; set; }
+        public bool? Visible { get; set; }
         public Category Category { get; set; }
         public Collection Collection { get; set; }
 
